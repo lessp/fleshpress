@@ -100,26 +100,21 @@
     $app = new Router(new Request($_SERVER));
 
     $app->get('/', function($params) {
-            echo '<h1>Hello World at / with a GET-request</h1>';
-        }
-    );
+        echo '<h1>/ with a GET-request</h1>';
+    });
 
     $app->post('/', function($params) {
         print_r($params['req']);
     });
 
-    $app->route('/boots', ['GET', 'POST'], function($params) {
+    $app->get('/boots', function($params) {
+        echo '<h1>/boots with a GET-request</h1>';
         print_r($params);
-        if ($params['method'] === 'POST') {
-            echo 'Method is POST';
-            echo '<pre>';
-                print_r($params['req']['name']);
-            echo '</pre>';
-        } else {
-            // do this
-            echo 'Method is GET';
-        }
-    }
+    });
+
+    $app->post('/boots', function($params) {
+        print_r($params);
+    });
 );
 
 
