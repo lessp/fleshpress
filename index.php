@@ -7,7 +7,7 @@
     $route = new Router(new Request($_SERVER));
 
     $route->get('/', function($req) {
-        render_view('./views/start.php', []); // NOT FOUND
+        render_view('./views/start.php');
     });
 
     $route->get('/posts', function($req) {
@@ -31,7 +31,7 @@
         try {
             print_r($req);
         } catch (Exception $err) {
-            $err->getMessage();
+            render_response(500, $err->getMessage());
         }
     });
 

@@ -13,35 +13,30 @@
 
         public function __construct(Request $req)
         {
-            self::$ROUTES = ['GET' => [], 'POST' => []];
+            self::$ROUTES = [
+                'GET' => [], 
+                'POST' => [],
+                'PUT' => []
+            ];
 
             $this->req = $req;
         }
 
-        public function get(string $path, $func)
+        public function get(string $path, $func, string $method = 'GET')
         {
-            if ($this->req->isPOST()) return;
-
-            self::$ROUTES['GET'][] = [
+            self::$ROUTES[$method][] = [
                 'path' => $path,
                 'function' => $func
                 // 'params' => $this->extractParams($path)
             ];
         }
 
-        public function post(string $path, $func)
-        {
-            if ($this->req->isGET()) return;
-
-            self::$ROUTES['POST'][] = [
-                'path' => $path,
-                'function' => $func
-            ];
-        }
+        public function post(string $path, $func) { return $this->get($path, $func, 'POST'); }
+        public function put(string $path, $func) { return $this->get($path, $func, 'PUT'); }
 
         private function execute($route)
         {
-            if (!isset($route)) {
+            if (! isset($route)) {
                 return render_response(404, 'Not found');
             }
 
@@ -76,6 +71,7 @@
         public function start()
         {
             $route = $this->match(self::$ROUTES, $this->req->getMethod());
+
             $this->execute($route);
         }
 
