@@ -1,16 +1,29 @@
 <?php 
 
+    require_once('./core/Model.php');
+
     class Post extends Model
     {
 
-        public function __construct()
+        static $tableName;
+
+        private $title;
+        private $content;
+
+        public function __construct(string $title, string $content)
         {
-            
+            $this->title = $title;
+            $this->content = $content;
         }
 
-        protected function _exec($q)
+        public function save()
         {
-            print_r($q);
+            // sql statement here..
+        }
+
+        public static function setTableName(string $tableName)
+        {
+            self::$tableName = $tableName;
         }
 
     }
