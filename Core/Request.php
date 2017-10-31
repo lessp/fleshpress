@@ -24,6 +24,7 @@
             $this->cookies = new FilteredMap($_COOKIE);
         }
 
+        public function getMethod(): string { return $this->method; }
         public function isGET(): bool { return $this->method === 'GET' ? true : false; }
         public function isPOST(): bool { return $this->method === 'POST' ? true : false; }
         public function getPath(): string { return $this->path; }

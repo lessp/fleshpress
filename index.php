@@ -1,13 +1,13 @@
 <?php
 
-    require_once('./Core/Request.php');
-    require_once('./Core/Router.php');
+    require_once('./core/Request.php');
+    require_once('./core/Router.php');
     require_once('./Utils.php');
 
     $route = new Router(new Request($_SERVER));
 
     $route->get('/', function($req) {
-        render_view('./Views/start.php');
+        render_view('./views/start.php', []); // NOT FOUND
     });
 
     $route->get('/posts', function($req) {
@@ -22,9 +22,9 @@
                 'content' => 'Also some dummy content.',
                 'author' => 'Whomever'
             ]
-        ];
+        ]; 
 
-        render_view('./Views/posts.php', ['posts' => $dummyPosts]);
+        render_view('./views/posts.php', ['posts' => $dummyPosts]);
     });
 
     $route->post('/posts', function($req) {
@@ -35,12 +35,14 @@
         }
     });
 
-    // $route->get('/posts/:id', function($req) {
-    //     print_r($req);
-    // });
+    $route->get('/posts/:id', function($req) {
+        print_r($req);
+    });
 
     $route->get('/admin', function($req) {
         render_view('./admin.php');
     });
+
+    $route->start();
 
 ?>

@@ -4,13 +4,20 @@
      * Abstract model
      * 
      * Används endast för att forma SQL-queries (generella)
-     * Klassmodellerna som ärver denna får hantera sin egen db-abstraktion via _perform
+     * Klassmodellerna som ärver denna får hantera sin egen db-abstraktion via _exec
      */
     abstract class Model
     {
+
+        protected $db;
         protected $table;
         protected $columns;
         protected $primaryKey;
+
+        public function __construct()
+        {
+            $this->db = Connection::getInstance();
+        }
         
         public function findAll()
         {

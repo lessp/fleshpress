@@ -1,13 +1,21 @@
 <?php
 
-    function render_view(string $template = null, array $params = [])
+    /**
+     *
+     * Renders a specified template file
+     *
+     * @param string template path 
+     * @param array parameters to pass to the view
+     */
+    function render_view(string $template_path = null, array $params = [])
     {
         ob_start();
-        if (file_exists($template)) 
+        if (file_exists($template_path)) 
         {
-            include($template);
+            include($template_path);
         }
-        return print ob_get_clean();
+        $renderedView = ob_get_clean();
+        return print $renderedView;
     }
 
     function render_response(int $responseCode, string $message)
@@ -21,9 +29,11 @@
                 <meta charset="UTF-8">
                 <title>Document</title>
             </head>
-            <body>'
-                . $message .
-            '</body>
+            <body>
+                <h2>'
+                    . $message .
+                '</h2>
+            </body>
             </html>'
         );
 

@@ -7,13 +7,13 @@
     {
         private static $GET_ROUTES;
         private static $POST_ROUTES;
+        private static $ROUTES;
 
         private $req;
 
         public function __construct(Request $req)
         {
-            self::$GET_ROUTES = [];
-            self::$POST_ROUTES = [];
+            self::$ROUTES = ['GET' => [], 'POST' => []];
 
             $this->req = $req;
         }
@@ -22,63 +22,61 @@
         {
             if ($this->req->isPOST()) return;
 
-            // TODO: support /path/:id
-            // echo '<pre>';
-            //     print_r(explode(':', $path));
-            // echo '</pre>';
-
-            self::$GET_ROUTES[] = [
+            self::$ROUTES['GET'][] = [
                 'path' => $path,
                 'function' => $func
+                // 'params' => $this->extractParams($path)
             ];
-
-            // echo '<pre>';
-            //     print_r(['GET_ROUTES' => self::$GET_ROUTES]);
-            // echo '</pre>';
-
-            $route = $this->match(self::$GET_ROUTES);
-
-            $this->execute($route);
         }
 
         public function post(string $path, $func)
         {
             if ($this->req->isGET()) return;
 
-            self::$POST_ROUTES[] = [
+            self::$ROUTES['POST'][] = [
                 'path' => $path,
                 'function' => $func
             ];
-
-            // echo '<pre>';
-            //     print_r(['POST_ROUTES' => self::$POST_ROUTES]);
-            // echo '</pre>';
-
-            $route = $this->match(self::$POST_ROUTES);
-
-            $this->execute($route);
         }
 
         private function execute($route)
         {
-            if (! isset($route)) {
+            if (!isset($route)) {
                 return render_response(404, 'Not found');
             }
 
             $route['function']($this->req->getParams());
         }
 
-        private function match(array $routes)
+        private function match(array $routes, string $method)
         {
-            foreach($routes as $key => $route)
+            foreach($routes[$method] as $key => $route)
             {
                 if ($this->req->getPath() === $route['path'])
                 {
                     return $route;
                 }
             }
+        }
 
-            return null;
+        private function extractParams($path)
+        {
+            $pathParts = explode('/', $path);
+            $params = [];
+
+            foreach($pathParts as $key => $part)
+            {
+                if (strpos($part, ':') === 0) {
+                    $name = substr($part, 1);
+                    $params[$name] = $pathParts[$key+1];
+                }
+            }
+        }
+
+        public function start()
+        {
+            $route = $this->match(self::$ROUTES, $this->req->getMethod());
+            $this->execute($route);
         }
 
     }

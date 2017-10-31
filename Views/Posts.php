@@ -1,13 +1,13 @@
 <?php
 
     /* Header */
-    include('Layout/header.php');
+    // include('Layout/header.php');
 
     echo '<h1>posts.php</h1>';
 
-    echo '<pre>';
-        print_r($params);
-    echo '</pre>';
+    // echo '<pre>';
+    //     print_r($params);
+    // echo '</pre>';
 
     foreach($params['posts'] as $post)
     {
@@ -17,5 +17,5 @@
     }
 
     /* Footer */
-    include('Layout/footer.php');
+    // include('Layout/footer.php');
 ?>
