@@ -1,14 +1,13 @@
 <?php
 
     require_once('Request.php');
+    require_once('Utils.php');
 
     class Router
     {
         private static $getRoutes;
         private static $postRoutes;
 
-        private $method;
-        private $uri;
         private $req;
 
         public function __construct(Request $req)
@@ -16,60 +15,68 @@
             self::$getRoutes = [];
             self::$postRoutes = [];
 
-            $this->uri = $req->getPath();
-
-            if ($req->isGET()) {
-                $this->method = 'GET';
-                $this->req = $_GET;
-            } elseif ($req->isPOST()) {
-                $this->method = 'POST';
-                $this->req = $_POST;
-            }
+            $this->req = $req;
         }
 
         public function get(string $path, $func)
         {
-            if ($this->method === 'POST') return;
+            if ($this->req->isPOST()) return;
+
+            // TODO: support /path/:id
+            // echo '<pre>';
+            //     print_r(explode(':', $path));
+            // echo '</pre>';
 
             self::$getRoutes[] = [
                 'path' => $path,
                 'function' => $func
             ];
 
+            // echo '<pre>';
+            //     print_r(['getRoutes' => self::$getRoutes]);
+            // echo '</pre>';
+
             $route = $this->match(self::$getRoutes);
-            if ($route)
-                $this->execute($route);
+
+            $this->execute($route);
         }
 
         public function post(string $path, $func)
         {
-            if ($this->method === 'GET') return;
+            if ($this->req->isGET()) return;
 
             self::$postRoutes[] = [
                 'path' => $path,
                 'function' => $func
             ];
 
+            // echo '<pre>';
+            //     print_r(['postRoutes' => self::$postRoutes]);
+            // echo '</pre>';
+
             $route = $this->match(self::$postRoutes);
-            if ($route)
-                $this->execute($route);
+
+            $this->execute($route);
         }
 
-        private function execute(array $route)
+        private function execute($route)
         {
-            $route['function']($this->req);
+            if (! isset($route)) return;
+
+            $route['function']($this->req->getParams());
         }
 
         private function match(array $routes)
         {
-            print_r($routes);
             foreach($routes as $key => $route)
             {
-                if ($this->uri === $route['path'])
+                if ($this->req->getPath() === $route['path'])
                 {
                     return $route;
                 }
-            } 
+            }
+
+            return null;
         }
 
     }

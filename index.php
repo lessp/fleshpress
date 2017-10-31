@@ -1,20 +1,41 @@
 <?php
 
-    require_once('Request.php');
-    require_once('Router.php');
+    require_once('./Core/Request.php');
+    require_once('./Core/Router.php');
     require_once('Utils.php');
 
-    $app = new Router(new Request($_SERVER));
+    $route = new Router(new Request($_SERVER));
 
-    $app->get('/', function($req) {
-        echo '<h1>Index with a GET-request</h1>';
+    $route->get('/', function($req) {
+        render_view('./Views/index.php');
     });
 
-    $app->get('/posts', function($req) {
-        render('./Views/Posts.php');
+    $route->get('/posts', function($req) {
+        $dummyPosts = [
+            [
+                'title' => 'Dummy Title',
+                'content' => 'This is some dummy content.',
+                'author' => 'Tom Ekander'
+            ],
+            [
+                'title' => 'Another Dummy Title',
+                'content' => 'Also some dummy content.',
+                'author' => 'Whomever'
+            ]
+        ];
+
+        render_view('./Views/posts.php', ['posts' => $dummyPosts]);
     });
 
-    $app->post('/posts', function($req) {
+    $route->post('/posts', function($req) {
+        try {
+            print_r($req);
+        } catch (Exception $err) {
+            $err->getMessage();
+        }
+    });
+
+    $route->get('/posts/:id', function($req) {
         print_r($req);
     });
 
