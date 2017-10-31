@@ -1,50 +1,71 @@
 <?php
 
-    use PDO;
+    require_once('./core/Connection.php');
+
+    // use \PDO;
 
     abstract class Model
     {
 
+        protected static $db;
+
+        public static function init()
+        {
+            self::$db = Connection::getInstance();
+        }
+
         protected static function getDB()
         {
-            static $db = null;
+            return self::$db->handler;
+        }
 
-            if ($db === null)
-            {
+        public static function findAll()
+        {
+            try {
+                $statement = self::getDB()->query('SELECT * from ' . static::$tableName);
+                $results = $statement->fetchAll(PDO::FETCH_ASSOC);
+    
+                if ($results) {
 
-                try {
-
-                    $config = require_once('./config/config.php');
-                    $dsn = $config['db']['dsn'];
-                    
-                    $db = new PDO($dsn, $config['db']['user'], $config['db']['password']);
-                    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-                    return $db;
-
-                } catch (PDOException $err) {
-                    echo $err->getMessage();
+                    $list = [];
+                    foreach($results as $item) {
+                        $list[] = $item;
+                    }
+    
+                    return $list;
                 }
 
+            } catch (PDOException $err) {
+                echo $err->getMessage();
             }
         }
 
-        public function findAll()
+        public static function findById(int $id)
         {
-            $list = [];
+            try {
+                $sql = 'SELECT * FROM ' . static::$tableName . ' WHERE id = :id';
+                $statement = self::getDB()->prepare($sql);
+                $statement->execute([':id' => $id]);
+                $results = $statement->fetchAll(PDO::FETCH_ASSOC);
 
-            $req = $this->getDB()->query('SELECT * from $this->tableName');
+                if ($results) {
+                    return $results;
+                }
 
-            foreach($req->fetchAll() as $item)
-            {
-                $list[] = $item;
+            } catch (PDOException $err) {
+                echo $err->getMessage();
             }
-
-            return $list;
         }
 
-        abstract public static function setTableName(string $tableName);
+        public static function findByIdAndUpdate(int $id, $params) {
+            // 
+        }
+
+        public static function setTableName(string $tableName) { static::$tableName = $tableName; }
+        public static function getTableName(): string { return static::$tableName; }
 
     }
+
+    Model::init();
 
 ?>

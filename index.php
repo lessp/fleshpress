@@ -5,9 +5,6 @@
     require_once('./Utils.php');
     require_once('./model/PostModel.php');
 
-    // initialisers
-    Post::setTableName('posts');
-
     $route = new Router(new Request($_SERVER));
 
     $route->get('/', function($req) {
@@ -15,22 +12,10 @@
     });
 
     $route->get('/posts', function($req) {
-        // $dummyPosts = [
-        //     [
-        //         'title' => 'Dummy Title',
-        //         'content' => 'This is some dummy content.',
-        //         'author' => 'Tom Ekander'
-        //     ],
-        //     [
-        //         'title' => 'Another Dummy Title',
-        //         'content' => 'Also some dummy content.',
-        //         'author' => 'Whomever'
-        //     ]
-        // ]; 
+        $posts = Post::findAll();
+        $post = Post::findById(1);
 
-        
-
-        render_view('./views/posts.php', ['posts' => $dummyPosts]);
+        render_view('./views/posts.php', ['posts' => $posts, 'post' => $post]);
     });
 
     $route->post('/posts', function($req) {
