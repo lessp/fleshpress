@@ -1,4 +1,8 @@
 <?php
+
+    /* Header */
+    include('Layout/header.php');
+
     echo '<h1>posts.php</h1>';
 
     echo '<pre>';
@@ -11,4 +15,7 @@
         echo '<span>' . $post['author'] . '</span>';
         echo '<p>' . $post['content'] . '</p>';
     }
+
+    /* Footer */
+    include('Layout/footer.php');
 ?>

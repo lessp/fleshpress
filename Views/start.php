@@ -1,5 +1,5 @@
 <?php
-    echo '<h1>index.php</h1>';
+    echo '<h1>start.php</h1>';
 
     echo '<pre>';
         print_r($params);

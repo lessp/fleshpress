@@ -2,12 +2,12 @@
 
     require_once('./Core/Request.php');
     require_once('./Core/Router.php');
-    require_once('Utils.php');
+    require_once('./Utils.php');
 
     $route = new Router(new Request($_SERVER));
 
     $route->get('/', function($req) {
-        render_view('./Views/index.php');
+        render_view('./Views/start.php');
     });
 
     $route->get('/posts', function($req) {
@@ -35,8 +35,12 @@
         }
     });
 
-    $route->get('/posts/:id', function($req) {
-        print_r($req);
+    // $route->get('/posts/:id', function($req) {
+    //     print_r($req);
+    // });
+
+    $route->get('/admin', function($req) {
+        render_view('./admin.php');
     });
 
 ?>

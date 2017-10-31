@@ -5,15 +5,15 @@
 
     class Router
     {
-        private static $getRoutes;
-        private static $postRoutes;
+        private static $GET_ROUTES;
+        private static $POST_ROUTES;
 
         private $req;
 
         public function __construct(Request $req)
         {
-            self::$getRoutes = [];
-            self::$postRoutes = [];
+            self::$GET_ROUTES = [];
+            self::$POST_ROUTES = [];
 
             $this->req = $req;
         }
@@ -27,16 +27,16 @@
             //     print_r(explode(':', $path));
             // echo '</pre>';
 
-            self::$getRoutes[] = [
+            self::$GET_ROUTES[] = [
                 'path' => $path,
                 'function' => $func
             ];
 
             // echo '<pre>';
-            //     print_r(['getRoutes' => self::$getRoutes]);
+            //     print_r(['GET_ROUTES' => self::$GET_ROUTES]);
             // echo '</pre>';
 
-            $route = $this->match(self::$getRoutes);
+            $route = $this->match(self::$GET_ROUTES);
 
             $this->execute($route);
         }
@@ -45,23 +45,25 @@
         {
             if ($this->req->isGET()) return;
 
-            self::$postRoutes[] = [
+            self::$POST_ROUTES[] = [
                 'path' => $path,
                 'function' => $func
             ];
 
             // echo '<pre>';
-            //     print_r(['postRoutes' => self::$postRoutes]);
+            //     print_r(['POST_ROUTES' => self::$POST_ROUTES]);
             // echo '</pre>';
 
-            $route = $this->match(self::$postRoutes);
+            $route = $this->match(self::$POST_ROUTES);
 
             $this->execute($route);
         }
 
         private function execute($route)
         {
-            if (! isset($route)) return;
+            if (! isset($route)) {
+                return render_response(404, 'Not found');
+            }
 
             $route['function']($this->req->getParams());
         }
