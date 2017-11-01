@@ -2,8 +2,6 @@
 
     require_once('./core/Connection.php');
 
-    // use \PDO;
-
     abstract class Model
     {
 
@@ -57,8 +55,63 @@
             }
         }
 
-        public static function findByIdAndUpdate(int $id, $params) {
-            // 
+        public static function findByIdAndUpdate(int $id, $params, string $idDenominator = 'id') 
+        {
+
+            try {
+
+                $paramLength = count($params);
+                $paramsToUpdate = '';
+                $paramsToUpdatePlaceholders = '';
+
+                $i = 0;
+                foreach($params as $key => $param) {
+                    if ($i === $paramLength - 1) {
+                        $paramsToUpdate .= $key . ' = :' . $key;
+                    } else {
+                        $paramsToUpdate .= $key . ' = :' . $key . ', ';
+                    }
+                    $i++;
+                }
+
+                $sql = (
+                    'UPDATE ' . static::$tableName . 
+                    ' SET ' .
+                    $paramsToUpdate . 
+                    ' WHERE ' . $idDenominator . ' = :' . $idDenominator
+                );
+
+                echo '<pre>';
+                    print_r('theSQLQuery: ' . $sql);
+                echo '</pre>';
+
+                self::getDB()->beginTransaction();
+                $statement = self::getDB()->prepare($sql);
+
+                foreach($params as $key => $param) {
+                    $params[':' . $key] = $param;
+                    unset($params[$key]);
+                }
+                
+                $params[':' . $idDenominator] = $id;
+                echo '<pre>';
+                    print_r($params);
+                echo '</pre>';
+
+                $statement->execute($params);
+
+                self::getDB()->commit();
+
+                $updatedItems = $statement->rowCount();
+
+                if ($updatedItems > 0) {
+                    return true;
+                }
+
+            } catch (PDOException $err) {
+                self::getDB()->rollBack();
+                echo $err->getMessage();
+            }
         }
 
         public static function setTableName(string $tableName) { static::$tableName = $tableName; }

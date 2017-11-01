@@ -1,6 +1,6 @@
 <?php
 
-    require_once('FilteredMap.php');
+    require_once('./core/FilteredMap.php');
 
     class Request
     {

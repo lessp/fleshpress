@@ -1,7 +1,7 @@
 <?php
 
     require_once('Request.php');
-    require_once('Utils.php');
+    require_once('./utils/Utils.php');
 
     class Router
     {
