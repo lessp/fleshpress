@@ -20,18 +20,26 @@
             'content' => 'And some kind of, half new content!'
         ], true);
 
-        $newPost = new Post('Title', 'Content');
-
-        $newlySavedPost = $newPost->save();
-
-        print_r($newlySavedPost);
-
-        render_view('./views/posts.php', ['posts' => $posts, 'post' => $post, 'updatedPost' => $updatedPost]);
+        render_view('./views/posts.php', [
+                'posts' => $posts, 
+                'post' => $post, 
+                'updatedPost' => $updatedPost
+        ]);
     });
 
     $route->post('/posts', function($req) {
         try {
-            print_r($req);
+            $newPost = new Post(
+                $req->get('title'), 
+                $req->get('content')
+            );
+
+            $postToReturn = $newPost->save();
+
+            print_r(
+                json_encode($postToReturn)
+            );
+
         } catch (Exception $err) {
             render_response(500, $err->getMessage());
         }

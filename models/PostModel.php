@@ -6,12 +6,10 @@
     {
 
         protected static $tableName;
-
         protected $schema;
 
         public function __construct(string $title, string $content)
         {
-
             $this->schema = [
                 'title' => $title,
                 'content' => $content
