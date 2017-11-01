@@ -15,14 +15,12 @@
         $posts = Post::findAll();
         $post = Post::findById(1);
 
-        $didUpdate = Post::findByIdAndUpdate(1, [
-            'title' => 'Pew pew, brand new title',
+        $updatedPost = Post::findByIdAndUpdate(1, [
+            'title' => 'Wohoo, brand new title!',
             'content' => 'And some kinda, half new content!'
-        ]);
+        ], true);
 
-        if ($didUpdate) {
-            print_r('Whoa, success!');
-        }
+        print_r($updatedPost);
 
         render_view('./views/posts.php', ['posts' => $posts, 'post' => $post]);
     });

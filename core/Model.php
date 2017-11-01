@@ -55,15 +55,44 @@
             }
         }
 
-        public static function findByIdAndUpdate(int $id, $params, string $idDenominator = 'id') 
+        public static function findOneById(int $id)
+        {
+            try {
+                $sql = 'SELECT * FROM ' . static::$tableName . ' WHERE id = :id LIMIT 1';
+                $statement = self::getDB()->prepare($sql);
+                $statement->execute([':id' => $id]);
+                $result = $statement->fetch(PDO::FETCH_ASSOC);
+
+                if ($result) {
+                    return $result;
+                }
+
+            } catch (PDOException $err) {
+                echo $err->getMessage();
+            }
+        }
+
+        /**
+         *
+         * Finds an item and updates it with corresponding table parameters
+         *
+         * @param int table itemId
+         * @param array parameters to update
+         * @param bool whether to return the updated item
+         * @param string if id-identifer is different than 'id'
+         */
+        public static function findByIdAndUpdate(
+            int $id, 
+            array $params, 
+            bool $returnUpdatedItem = false,
+            string $idDenominator = 'id'
+        ) 
         {
 
             try {
 
                 $paramLength = count($params);
                 $paramsToUpdate = '';
-                $paramsToUpdatePlaceholders = '';
-
                 $i = 0;
                 foreach($params as $key => $param) {
                     if ($i === $paramLength - 1) {
@@ -105,7 +134,12 @@
                 $updatedItems = $statement->rowCount();
 
                 if ($updatedItems > 0) {
-                    return true;
+                    if ($returnUpdatedItem) 
+                    {
+                        return self::findOneById($id);
+                    } else {
+                        return true;
+                    }
                 }
 
             } catch (PDOException $err) {
