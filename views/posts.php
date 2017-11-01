@@ -1,9 +1,18 @@
 <?php
 
     /* Header */
-    // include('Layout/header.php');
+    include('Layout/header.php');
 
     echo '<h1>template -- ./views/posts.php</h1>';
+    echo '<hr>';
+
+    echo '<h2>Post::findByIdAndUpdate(1)</h2>';
+
+    echo '<span>ID: ' . $params['updatedPost']['id'] . '</span>';
+    echo '<h3>' . $params['updatedPost']['title'] . '</h3>';
+    echo '<span>' . $params['updatedPost']['author'] . '</span>';
+    echo '<p>' . $params['updatedPost']['content'] . '</p>';
+
     echo '<hr>';
 
     echo '<h2>Post::findAll()</h2>';
@@ -32,5 +41,5 @@
     echo '</pre>';
 
     /* Footer */
-    // include('Layout/footer.php');
+    include('Layout/footer.php');
 ?>

@@ -110,9 +110,9 @@
                     ' WHERE ' . $idDenominator . ' = :' . $idDenominator
                 );
 
-                echo '<pre>';
-                    print_r('theSQLQuery: ' . $sql);
-                echo '</pre>';
+                // echo '<pre>';
+                //     print_r('theSQLQuery: ' . $sql);
+                // echo '</pre>';
 
                 self::getDB()->beginTransaction();
                 $statement = self::getDB()->prepare($sql);
@@ -123,9 +123,9 @@
                 }
                 
                 $params[':' . $idDenominator] = $id;
-                echo '<pre>';
-                    print_r($params);
-                echo '</pre>';
+                // echo '<pre>';
+                //     print_r($params);
+                // echo '</pre>';
 
                 $statement->execute($params);
 
@@ -141,6 +141,70 @@
                         return true;
                     }
                 }
+
+            } catch (PDOException $err) {
+                self::getDB()->rollBack();
+                echo $err->getMessage();
+            }
+        }
+
+        public function save()
+        {
+            print_r($this->schema);
+
+            $params = $this->schema;
+            
+            try {
+
+                print_r(count($this->schema));
+
+                $i = 0;
+                $paramsLength = count($params);
+                $paramsToUpdate;
+                $paramsToUpdatePlaceholders;
+                foreach($params as $key => $param) {
+                  if ($i === 0) {
+                    $paramsToUpdate .= '(' . $key . ', ';
+                    $paramsToUpdatePlaceholders .= '(:' . $key . ', ';
+                  } elseif ($i === $paramsLength - 1) {
+                    $paramsToUpdate .= $key . ')';
+                    $paramsToUpdatePlaceholders .= ':' . $key . ')';
+                  } else {
+                    $paramsToUpdate .= $key . ', ';
+                    $paramsToUpdatePlaceholders .= ':' . $key . ', ';
+                  }
+                  
+                  $i++;
+                }
+                $tableName = 'posts';
+                $sql = (
+                  'INSERT INTO ' . $tableName . 
+                  ' ' .
+                  $paramsToUpdate . 
+                  ' VALUES ' . 
+                  $paramsToUpdatePlaceholders
+                  );
+                  
+                print_r($sql);
+                self::getDB()->beginTransaction();
+                $statement = self::getDB()->prepare($sql);
+
+                foreach($params as $key => $param) {
+                    $params[':' . $key] = $param;
+                    unset($params[$key]);
+                }
+
+                echo '<pre>';
+                    print_r($params);
+                echo '</pre>';
+
+                $statement->execute($params);
+                $newItemId = self::getDB()->lastInsertId();
+
+                print_r($newItemId);
+                self::getDB()->commit();
+
+                return self::findOneById($newItemId);
 
             } catch (PDOException $err) {
                 self::getDB()->rollBack();

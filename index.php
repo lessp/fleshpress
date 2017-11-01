@@ -16,13 +16,17 @@
         $post = Post::findById(1);
 
         $updatedPost = Post::findByIdAndUpdate(1, [
-            'title' => 'Wohoo, brand new title!',
-            'content' => 'And some kinda, half new content!'
+            'title' => 'Woohoo, brand new title!',
+            'content' => 'And some kind of, half new content!'
         ], true);
 
-        print_r($updatedPost);
+        $newPost = new Post('Title', 'Content');
 
-        render_view('./views/posts.php', ['posts' => $posts, 'post' => $post]);
+        $newlySavedPost = $newPost->save();
+
+        print_r($newlySavedPost);
+
+        render_view('./views/posts.php', ['posts' => $posts, 'post' => $post, 'updatedPost' => $updatedPost]);
     });
 
     $route->post('/posts', function($req) {

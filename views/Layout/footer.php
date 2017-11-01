@@ -1,5 +1,6 @@
-<?php
 
-    echo 'footer.php';
 
-?>
+    <?php echo 'footer.php' ?>
+
+</body>
+</html>

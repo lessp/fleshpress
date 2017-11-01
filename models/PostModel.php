@@ -7,35 +7,15 @@
 
         protected static $tableName;
 
-        private $title;
-        private $content;
+        protected $schema;
 
         public function __construct(string $title, string $content)
         {
-            $this->title = $title;
-            $this->content = $content;
-        }
 
-        public function save()
-        {
-
-            if (! isset($this->title) || ! isset($this->content)) return;
-
-            try {
-                $statement = self::getDB()->prepare(
-                    'INSERT INTO ' . static::$tableName . ' (title, content) VALUES (:title, :content)'
-                );
-                print_r($statement);
-                $statement->bindValue(':title', $this->title);
-                $statement->bindValue(':content', $this->content);
-
-
-                $result = $statement->execute();
-
-                return $result;
-            } catch (PDOException $err) {
-                echo $err->getMessage();
-            }
+            $this->schema = [
+                'title' => $title,
+                'content' => $content
+            ];
         }
 
     }
