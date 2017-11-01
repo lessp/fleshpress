@@ -7,49 +7,49 @@
 
     $route = new Router(new Request($_SERVER));
 
-    $route->get('/', function($req) {
-        render_view('./views/start.php');
+    $route->get('/', function($req, $res) {
+        $res->render_template('./views/start.html');
     });
 
-    $route->get('/posts', function($req) {
+    $route->get('/posts', function($req, $res) {
         $posts = Post::findAll();
         $post = Post::findById(1);
 
         $updatedPost = Post::findByIdAndUpdate(1, [
-            'title' => 'Woohoo, brand new title!',
+            'title' => 'Wooah, brand new title!',
             'content' => 'And some kind of, half new content!'
         ], true);
 
-        render_view('./views/posts.php', [
-                'posts' => $posts, 
-                'post' => $post, 
-                'updatedPost' => $updatedPost
+        $res->render_template('./views/posts.html', [
+            'posts' => $posts, 
+            'post' => $post, 
+            'updatedPost' => $updatedPost
         ]);
     });
 
-    $route->post('/posts', function($req) {
+    $route->post('/posts', function($req, $res) {
         try {
-            $newPost = new Post(
-                $req->get('title'), 
-                $req->get('content')
-            );
+            $result = $req->getBody();
 
+            $newPost = new Post(
+                $result->get('title'), 
+                $result->get('content')
+            );
+            
             $postToReturn = $newPost->save();
 
-            print_r(
-                json_encode($postToReturn)
-            );
+            $res->json($postToReturn, 200);
 
         } catch (Exception $err) {
-            render_response(500, $err->getMessage());
+            $res->json(['message' => 'Oops. There was an error.'], 500);
         }
     });
 
-    $route->get('/posts/:id', function($req) {
+    $route->get('/posts/:id', function($req, $res) {
         print_r($req);
     });
 
-    $route->get('/admin', function($req) {
+    $route->get('/admin', function($req, $res) {
         render_view('./admin.php');
     });
 

@@ -1,6 +1,7 @@
 <?php
 
     require_once('Request.php');
+    require_once('Response.php');
     require_once('./utils/Utils.php');
 
     class Router
@@ -40,7 +41,10 @@
                 return render_response(404, 'Not found');
             }
 
-            $route['function']($this->req->getParams());
+            $route['function'](
+                $this->req, 
+                new Response()
+            );
         }
 
         private function match(array $routes, string $method)

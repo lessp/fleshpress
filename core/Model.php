@@ -206,7 +206,7 @@
 
             } catch (PDOException $err) {
                 self::getDB()->rollBack();
-                echo $err->getMessage();
+                return $err->getMessage();
             }
         }
 
