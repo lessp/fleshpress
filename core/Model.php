@@ -40,6 +40,11 @@
             }
         }
 
+        public static function find(array $params)
+        {
+            // TODO
+        }
+
         public static function findById(int $id)
         {
             try {
@@ -65,16 +70,16 @@
                 $sql = 'SELECT * FROM ' . static::$tableName . ' WHERE id = :id LIMIT 1';
                 $statement = self::getDB()->prepare($sql);
                 $statement->execute([':id' => $id]);
-                $result = $statement->fetch(PDO::FETCH_ASSOC);
+                $result = $statement->fetch(PDO::FETCH_ASSOC);  
 
-                if (!empty ($result)) {
+                if (! empty($result)) {
                     return $result;
                 } else {
                     throw new Exception ("That's an error.");
                 }
 
             } catch (PDOException $err) {
-                echo $err->getMessage();
+                return $err->getMessage();
             }
         }
 
@@ -218,8 +223,8 @@
             }
         }
 
-        public static function setTableName(string $tableName) { static::$tableName = $tableName; }
         public static function getTableName(): string { return static::$tableName; }
+        abstract static public function register();
 
     }
 

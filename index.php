@@ -1,10 +1,13 @@
 <?php
 
-    require_once('./core/Request.php');
+    ini_set('display_errors', 1);
+    ini_set('display_startup_errors', 1);
+    error_reporting(E_ALL);
+
     require_once('./core/Router.php');
     require_once('./models/PostModel.php');
 
-    $route = new Router(new Request($_SERVER));
+    $route = new Router();
 
     $route->get('/', function($req, $res) {
         $res->render_template('start.html', ['req' => $req]);

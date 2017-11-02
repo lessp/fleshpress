@@ -6,7 +6,7 @@
     <h2 id="findByIdAndUpdate">Post::findByIdAndUpdate(1)</h2>
     <article data-id="<?php echo $params['updatedPost']['id']; ?>">
         <h3><?php echo $params['updatedPost']['title']; ?></h3>
-        <span><?php echo $params['updatedPost']['author']; ?></span>
+        <!-- <span><?php echo $params['updatedPost']['author']; ?></span> -->
         <p><?php echo $params['updatedPost']['content']; ?></p>
     </article>
 
@@ -16,7 +16,7 @@
 <?php foreach($params['posts'] as $post): ?>
     <article data-id="<?php echo $post['id']; ?>">
         <h3><?php echo $post['title']; ?></h3>
-        <span><?php echo $post['author']; ?></span>
+        <!-- <span><?php echo $post['author']; ?></span> -->
         <p><?php echo $post['content']; ?></p>
     </article>
 <?php endforeach; ?>
@@ -25,7 +25,7 @@
 <?php foreach($params['post'] as $post) : ?>
     <article data-id="<?php echo $post['id']; ?>">
         <h3><?php echo $post['title']; ?></h3>
-        <span><?php echo $post['author']; ?></span>
+        <!-- <span><?php echo $post['author']; ?></span> -->
         <p><?php echo $post['content']; ?></p>
     </article>
 <?php endforeach; ?>

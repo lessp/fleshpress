@@ -16,8 +16,13 @@
             ];
         }
 
+        public static function register()
+        {
+            static::$tableName = 'posts';
+        }
+
     }
 
-    Post::setTableName('posts');
+    Post::register();
 
 ?>

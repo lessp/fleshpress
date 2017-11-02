@@ -1,4 +1,142 @@
-html { font-size: 62.5%; }
+@import url("https://fonts.googleapis.com/css?family=Nunito");
+
+* {
+	box-sizing: border-box;
+}
+html {
+	height: 100%;
+	font-size: 62.5%;
+}
 body {
-    font: 500 1.6rem/1.5 'Helvetica Neue', sans-serif;
+	font-family: "Nunito", sans-serif;
+	line-height: 1.5;
+	font-weight: normal;
+	font-size: 1.6rem;
+	letter-spacing: 0.25px;
+	background: #eee;
+	color: #111;
+}
+
+#wrapper {
+	max-width: 960px;
+	margin: 0 auto;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
+header {
+	display: flex;
+	align-items: center;
+	flex-direction: column;
+}
+
+header > nav {
+	margin-left: auto;
+}
+
+ul {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+li {
+	display: inline-block;
+}
+
+a {
+	text-decoration: none;
+	color: #111;
+}
+
+nav > ul > li {
+	font-size: 1.8rem;
+	padding: 0 1.2rem;
+}
+nav > ul > li > a {
+	padding: 0.8rem 0;
+	border-bottom: 2px solid transparent;
+	position: relative;
+}
+nav > ul > li > a:hover {
+	border-bottom: 2px solid slateblue;
+}
+
+nav > ul > li > a:before {
+	/* content: '[' attr(data-req-method) ']'; */
+	position: absolute;
+	left: 0;
+	top: 100%;
+	height: 100%;
+	width: 100%;
+	text-align: center;
+	font-family: monospace;
+	font-size: 1.4rem;
+	display: block;
+}
+
+article {
+	padding: 2.25rem 4.5rem;
+	margin-bottom: 4.5rem;
+	background: white;
+	width: 100%;
+	box-shadow: 0 2rem 4rem 2px rgba(0, 0, 0, 0.1);
+	position: relative;
+	transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+article:hover {
+	/* */
+}
+
+article:after {
+	content: attr(data-id);
+	position: absolute;
+	left: -10%;
+	top: calc(50% - 1.6rem);
+	font-size: 3.2rem;
+	line-height: 3.2rem;
+}
+
+h1,
+h2 {
+	font-size: 6.4rem;
+	font-weight: 800;
+	position: relative;
+	display: inline-block;
+	margin-bottom: 6.4rem;
+	line-height: 1;
+
+	/* */
+	margin-left: calc(6.4rem + 1.4rem);
+}
+
+h2 {
+	font-size: 2.4rem;
+	line-height: 1.5;
+	margin-bottom: 2.4rem;
+
+	/* */
+	margin-left: calc(1.8rem + 0.7rem);
+}
+
+h1:after,
+h2:after {
+	content: "";
+	position: absolute;
+	display: block;
+	/* top: 9.6rem; */
+	top: 6.4rem;
+	left: calc(-6.4rem - 1.4rem);
+	width: 6.4rem;
+	height: 4px;
+	background: slateblue;
+}
+h2:after {
+	height: 2px;
+	top: 2.4rem;
+	left: calc(-1.8rem - 0.7rem);
+	width: 1.8rem;
 }

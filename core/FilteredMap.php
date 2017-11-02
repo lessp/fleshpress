@@ -12,8 +12,9 @@
         public function has(string $name): bool { return isset($this->map[$name]); }
         public function get(string $name) 
         { 
-            $name = $this->_check($name);
-            return $this->map[$name];
+            return $this->map[
+                $this->_exists($name)
+            ];
         }
         public function getInt(string $name) { return (int) $this->get($name); }
         public function getNumber(string $name) { return (float) $this->get($name); }
@@ -25,13 +26,13 @@
             return $filter ? addslashes($value) : $value;
         }
 
-        private function _check()
+        private function _exists(string $name)
         {
-            if ($this->has($name)) {
-                return $name;
-            } else {
-                throw new Exception;
+            if (! $this->has($name)) {
+                throw new Exception('Parameter does not exist.');
             }
+
+            return $name;
         }
     }
 

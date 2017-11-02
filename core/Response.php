@@ -32,7 +32,7 @@
             $renderedView = ob_get_clean();
             return print($renderedView);
         }
-
+        
         public function render_template(string $template_path = null, array $params = [], int $statusCode = null)
         {
             $template_path = Preferences::$templateDirectory . $template_path;

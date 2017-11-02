@@ -5,13 +5,11 @@
 
     class Router
     {
-        private static $GET_ROUTES;
-        private static $POST_ROUTES;
         private static $ROUTES;
 
         private $req;
 
-        public function __construct(Request $req)
+        public function __construct()
         {
             self::$ROUTES = [
                 'GET' => [], 
@@ -19,7 +17,7 @@
                 'PUT' => []
             ];
 
-            $this->req = $req;
+            $this->req = new Request($_SERVER);
         }
 
         public function get(string $route, $func, string $method = 'GET')
@@ -76,10 +74,10 @@
             $params = [];
             
             foreach($routeParts as $key => $routePart) {
-              if (strpos($routePart, ':') === 0) {
-                $paramName = substr($routePart, 1);
-                $params[$paramName] = $pathParts[$key];
-              }
+                if (strpos($routePart, ':') === 0) {
+                    $paramName = substr($routePart, 1);
+                    $params[$paramName] = $pathParts[$key];
+                }
             }
 
             return $params;
@@ -87,6 +85,9 @@
 
         public function start()
         {
+            echo '<pre>';
+                print_r(self::$ROUTES);
+            echo '</pre>';
             $this->match(self::$ROUTES, $this->req->method());
         }
 
