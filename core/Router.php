@@ -2,7 +2,6 @@
 
     require_once('Request.php');
     require_once('Response.php');
-    require_once('./utils/Utils.php');
 
     class Router
     {
@@ -23,26 +22,31 @@
             $this->req = $req;
         }
 
-        public function get(string $path, $func, string $method = 'GET')
+        public function get(string $route, $func, string $method = 'GET')
         {
             self::$ROUTES[$method][] = [
-                'path' => $path,
-                'function' => $func
-                // 'params' => $this->extractParams($path)
+                'route' => $route,
+                'function' => $func,
+                'params' => $this->extractParams($route, $this->req->path()) // sätt bara param
             ];
         }
 
-        public function post(string $path, $func) { return $this->get($path, $func, 'POST'); }
-        public function put(string $path, $func) { return $this->get($path, $func, 'PUT'); }
+        public function post(string $route, $func) { return $this->get($route, $func, 'POST'); }
+        public function put(string $route, $func) { return $this->get($route, $func, 'PUT'); }
 
-        private function execute($route)
+        private function execute(array $route, array $params = null)
         {
             if (! isset($route)) {
-                return render_response(404, 'Not found');
+                $res = new Response();
+                return $res->send('ERROR: Not found', 404);
             }
 
-            $route['function'](
-                $this->req, 
+            if ($params !== null) {
+                $this->req->setParams($params);
+            }
+
+            $route['function'] (
+                $this->req,
                 new Response()
             );
         }
@@ -51,32 +55,38 @@
         {
             foreach($routes[$method] as $key => $route)
             {
-                if ($this->req->getPath() === $route['path'])
-                {
-                    return $route;
+                if (empty($route['params'])) {
+
+                    if ($this->req->path() === $route['route'])
+                    {
+                        return $this->execute($route);
+                    }
+                } else {
+                    // TODO: see if path matches
+                    return $this->execute($route, $route['params']);
                 }
             }
         }
 
-        private function extractParams($path)
+        private function extractParams(string $route, string $path) 
         {
+            $routeParts = explode('/', $route);
             $pathParts = explode('/', $path);
             $params = [];
-
-            foreach($pathParts as $key => $part)
-            {
-                if (strpos($part, ':') === 0) {
-                    $name = substr($part, 1);
-                    $params[$name] = $pathParts[$key+1];
-                }
+            
+            foreach($routeParts as $key => $routePart) {
+              if (strpos($routePart, ':') === 0) {
+                $paramName = substr($routePart, 1);
+                $params[$paramName] = $pathParts[$key];
+              }
             }
+
+            return $params;
         }
 
         public function start()
         {
-            $route = $this->match(self::$ROUTES, $this->req->getMethod());
-
-            $this->execute($route);
+            $this->match(self::$ROUTES, $this->req->method());
         }
 
     }

@@ -2,7 +2,6 @@
 
     require_once('./core/Request.php');
     require_once('./core/Router.php');
-    require_once('./utils/Utils.php');
     require_once('./models/PostModel.php');
 
     $route = new Router(new Request($_SERVER));
@@ -29,7 +28,7 @@
 
     $route->post('/posts', function($req, $res) {
         try {
-            $result = $req->getBody();
+            $result = $req->body();
 
             $newPost = new Post(
                 $result->get('title'), 
@@ -41,16 +40,19 @@
             $res->json($postToReturn, 200);
 
         } catch (Exception $err) {
-            $res->json(['message' => 'Oops. There was an error.'], 500);
+            print_r('NÅT GICK FEL !');
+            $res->json($err->getMessage(), 400);
         }
     });
 
     $route->get('/posts/:id', function($req, $res) {
-        print_r($req);
-    });
+        try {
+            $post = Post::findById($req->params()->get('id'));
 
-    $route->get('/admin', function($req, $res) {
-        render_view('./admin.php');
+            $res->json($post, 200);
+        } catch (Exception $err) {
+            $res->json($err->getMessage(), 400);
+        }
     });
 
     $route->start();

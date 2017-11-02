@@ -23,7 +23,7 @@
                 $statement = self::getDB()->query('SELECT * from ' . static::$tableName);
                 $results = $statement->fetchAll(PDO::FETCH_ASSOC);
     
-                if ($results) {
+                if (! empty($results)) {
 
                     $list = [];
                     foreach($results as $item) {
@@ -31,10 +31,12 @@
                     }
     
                     return $list;
+                } else {
+                    throw new Exception("Could not fetch results.");
                 }
 
             } catch (PDOException $err) {
-                echo $err->getMessage();
+                return $err->getMessage();
             }
         }
 
@@ -46,12 +48,14 @@
                 $statement->execute([':id' => $id]);
                 $results = $statement->fetchAll(PDO::FETCH_ASSOC);
 
-                if ($results) {
+                if (! empty($results)) {
                     return $results;
+                } else {
+                    throw new Exception ("That's an error.");
                 }
 
             } catch (PDOException $err) {
-                echo $err->getMessage();
+                return $err->getMessage();
             }
         }
 
@@ -63,8 +67,10 @@
                 $statement->execute([':id' => $id]);
                 $result = $statement->fetch(PDO::FETCH_ASSOC);
 
-                if ($result) {
+                if (!empty ($result)) {
                     return $result;
+                } else {
+                    throw new Exception ("That's an error.");
                 }
 
             } catch (PDOException $err) {
@@ -144,7 +150,7 @@
 
             } catch (PDOException $err) {
                 self::getDB()->rollBack();
-                echo $err->getMessage();
+                return $err->getMessage();
             }
         }
 
@@ -186,7 +192,7 @@
                     ' VALUES ' . 
                     $paramsToUpdatePlaceholders
                 );
-                  
+
                 self::getDB()->beginTransaction();
                 $statement = self::getDB()->prepare($sql);
 
@@ -202,9 +208,11 @@
 
                 if ($newItemId !== 0) {
                     return self::findOneById($newItemId);
+                } else {
+                    throw new Exception('Item could not be inserted.');
                 }
 
-            } catch (PDOException $err) {
+            } catch (Exception $err) {
                 self::getDB()->rollBack();
                 return $err->getMessage();
             }

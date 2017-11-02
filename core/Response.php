@@ -26,7 +26,7 @@
                 include($template_path);
             }
             $renderedView = ob_get_clean();
-            return print $renderedView;
+            return print($renderedView);
         }
 
         public function json($data, int $statusCode = null)
@@ -38,12 +38,22 @@
 
             $data = json_encode($data);
 
-            return print $data;
+            return print($data);
         }
 
         public function status(int $statusCode = null)
         {
             http_response_code($statusCode);
+        }
+
+        public function send($data, int $statusCode = null)
+        {
+            if (isset($statusCode)) 
+            {
+                http_response_code($statusCode);
+            }
+
+            return print($data);
         }
 
     }

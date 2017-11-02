@@ -9,6 +9,7 @@
         private $path;
         private $cookies;
         private $body;
+        private $params;
 
         function __construct($req)
         {
@@ -24,12 +25,15 @@
             $this->cookies = new FilteredMap($_COOKIE);
         }
 
-        public function getMethod(): string { return $this->method; }
+        public function setParams($params) { $this->params = new FilteredMap($params); }
+
+        public function params(): FilteredMap { return $this->params; }
         public function isGET(): bool { return $this->method === 'GET' ? true : false; }
         public function isPOST(): bool { return $this->method === 'POST' ? true : false; }
-        public function getPath(): string { return $this->path; }
-        public function getCookies(): FilteredMap { return $this->cookies; }
-        public function getBody(): FilteredMap { return $this->body; }
+        public function method(): string { return $this->method; }
+        public function path(): string { return $this->path; }
+        public function cookies(): FilteredMap { return $this->cookies; }
+        public function body(): FilteredMap { return $this->body; }
 
     }
 
