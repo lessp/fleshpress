@@ -7,7 +7,7 @@
     $route = new Router(new Request($_SERVER));
 
     $route->get('/', function($req, $res) {
-        $res->render_template('./views/start.html');
+        $res->render_template('start.html', ['req' => $req]);
     });
 
     $route->get('/posts', function($req, $res) {
@@ -15,11 +15,11 @@
         $post = Post::findById(1);
 
         $updatedPost = Post::findByIdAndUpdate(1, [
-            'title' => 'Wooah, brand new title!',
+            'title' => 'Woohoo, brand new title!',
             'content' => 'And some kind of, half new content!'
         ], true);
 
-        $res->render_template('./views/posts.html', [
+        $res->render_template('posts.html', [
             'posts' => $posts, 
             'post' => $post, 
             'updatedPost' => $updatedPost
@@ -40,20 +40,29 @@
             $res->json($postToReturn, 200);
 
         } catch (Exception $err) {
-            print_r('NÅT GICK FEL !');
             $res->json($err->getMessage(), 400);
         }
     });
 
-    $route->get('/posts/:id', function($req, $res) {
+    $route->get('/posts/:id', function($req, $res, $params) {
         try {
-            $post = Post::findById($req->params()->get('id'));
+            $post = Post::findOneById($params['id']);
 
-            $res->json($post, 200);
+            $res->render_template('post.html', ['post' => $post]);
         } catch (Exception $err) {
             $res->json($err->getMessage(), 400);
         }
     });
+
+    // $route->get('/posts/:id', function($req, $res, $params) {
+    //     try {
+    //         $post = Post::findById($params['id']);
+
+    //         $res->json($post, 200);
+    //     } catch (Exception $err) {
+    //         $res->json($err->getMessage(), 400);
+    //     }
+    // });
 
     $route->start();
 

@@ -1,7 +1,11 @@
 <?php
 
+    require_once('./utils/Preferences.php');
+
     class Response 
     {
+
+        private $templateDirectory;
 
         public function __construct()
         {}
@@ -13,7 +17,7 @@
         * @param string template path 
         * @param array parameters to pass to the view
         */
-        public function render_template(string $template_path = null, array $params = [], int $statusCode = null)
+        public function render_file(string $filePath = null, array $params = [], int $statusCode = null)
         {
             if (isset($statusCode))
             {
@@ -21,12 +25,18 @@
             }
 
             ob_start();
-            if (file_exists($template_path)) 
+            if (file_exists($filePath)) 
             {
-                include($template_path);
+                include($filePath);
             }
             $renderedView = ob_get_clean();
             return print($renderedView);
+        }
+
+        public function render_template(string $template_path = null, array $params = [], int $statusCode = null)
+        {
+            $template_path = Preferences::$templateDirectory . $template_path;
+            return $this->render_file($template_path, $params, $statusCode);
         }
 
         public function json($data, int $statusCode = null)

@@ -41,13 +41,14 @@
                 return $res->send('ERROR: Not found', 404);
             }
 
-            if ($params !== null) {
-                $this->req->setParams($params);
-            }
+            // if ($params !== null) {
+            //     $this->req->setParams($params);
+            // }
 
             $route['function'] (
                 $this->req,
-                new Response()
+                new Response(),
+                $params
             );
         }
 

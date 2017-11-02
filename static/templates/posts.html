@@ -1,0 +1,40 @@
+<?php include_once 'header.html'; ?>
+
+<h1>templates -- posts.html</h1>
+
+<?php if (! empty($params['updatedPost'])) : ?>
+    <h2 id="findByIdAndUpdate">Post::findByIdAndUpdate(1)</h2>
+    <article data-id="<?php echo $params['updatedPost']['id']; ?>">
+        <h3><?php echo $params['updatedPost']['title']; ?></h3>
+        <span><?php echo $params['updatedPost']['author']; ?></span>
+        <p><?php echo $params['updatedPost']['content']; ?></p>
+    </article>
+
+<?php endif; ?>
+
+<h2 id="findAll">Post::findAll()</h2>
+<?php foreach($params['posts'] as $post): ?>
+    <article data-id="<?php echo $post['id']; ?>">
+        <h3><?php echo $post['title']; ?></h3>
+        <span><?php echo $post['author']; ?></span>
+        <p><?php echo $post['content']; ?></p>
+    </article>
+<?php endforeach; ?>
+
+<h2 id="findById">Post::findById(1)</h2>
+<?php foreach($params['post'] as $post) : ?>
+    <article data-id="<?php echo $post['id']; ?>">
+        <h3><?php echo $post['title']; ?></h3>
+        <span><?php echo $post['author']; ?></span>
+        <p><?php echo $post['content']; ?></p>
+    </article>
+<?php endforeach; ?>
+
+<h2>$params</h2>
+<article>
+<pre>
+<?php print_r($params); ?>
+</pre>
+</article>
+
+<?php include_once 'footer.html'; ?>
