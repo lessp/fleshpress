@@ -16,19 +16,19 @@
             $this->path = $requestedPath;
             
             switch ($this->method) {
-                case 'GET': $this->params = new FilteredMap($_GET); break;
-                case 'POST': $this->body = new FilteredMap($_POST); break;
+                case 'GET': $this->params = $_GET; break;
+                case 'POST': $this->body = $_POST; break;
                 case 'PUT': /* TODO */; break;
                 case 'DELETE': /* TODO */; break;
             }
             
-            $this->cookies = new FilteredMap($_COOKIE);
+            $this->cookies = $_COOKIE;
         }
 
         public function params(): array { return $this->params; }
         public function method(): string { return $this->method; }
         public function path(): string { return $this->path; }
-        public function cookies(): array { return $this->cookies; }
+        public function cookies() { return $this->cookies; }
         public function body(): FilteredMap { return $this->body; }
 
     }

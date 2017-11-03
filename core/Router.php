@@ -14,11 +14,11 @@
         public function __construct()
         {}
 
-        public static function add(string $route, $func, string $method) 
+        public static function add(string $route, $funcs, string $method) 
         {
             self::$ROUTES[$method][] = [
                 'route' => $route,
-                'func' => $func,
+                'funcs' => $funcs,
                 'urlVars' => self::extractURLVars($route)
             ];
         }
@@ -44,11 +44,12 @@
 
         private static function execute(array $route, array $params = null)
         {
-            $route['func'] (
-                new Request(self::$REQUEST_METHOD, self::$REQUEST_URI), 
-                new Response(), 
-                $params
-            );
+            $req = new Request(self::$REQUEST_METHOD, self::$REQUEST_URI);
+            $res = new Response();
+
+            foreach($route['funcs'] as $func) {
+                $func($req, $res, $params);
+            }
         }
 
         public static function match(string $path, string $method)

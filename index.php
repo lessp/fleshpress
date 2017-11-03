@@ -13,6 +13,10 @@
         $res->render_template('start.html', ['req' => $req]);
     });
 
+    $app->get('/auth', 'requireLogin', function($req, $res) {
+        $res->render_template('start.html', ['req' => $req]);
+    });
+
     $app->get('/posts', function($req, $res) {
         $posts = Post::findAll();
         $post = Post::findById(1);
@@ -57,15 +61,15 @@
         }
     });
 
-    // $app->get('/posts/:id', function($req, $res, $params) {
-    //     try {
-    //         $post = Post::findById($params['id']);
+    $app->get('/posts/:id', function($req, $res, $params) {
+        try {
+            $post = Post::findById($params['id']);
 
-    //         $res->json($post, 200);
-    //     } catch (Exception $err) {
-    //         $res->json($err->getMessage(), 400);
-    //     }
-    // });
+            $res->json($post, 200);
+        } catch (Exception $err) {
+            $res->json($err->getMessage(), 400);
+        }
+    });
 
     $app->start();
 
