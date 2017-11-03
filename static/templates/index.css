@@ -20,10 +20,6 @@ body {
 #wrapper {
 	max-width: 960px;
 	margin: 0 auto;
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
 }
 
 header {
@@ -33,7 +29,6 @@ header {
 }
 
 header > nav {
-	margin-left: auto;
 }
 
 ul {
@@ -77,6 +72,13 @@ nav > ul > li > a:before {
 	display: block;
 }
 
+main {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
 article {
 	padding: 2.25rem 4.5rem;
 	margin-bottom: 4.5rem;
@@ -98,6 +100,12 @@ article:after {
 	top: calc(50% - 1.6rem);
 	font-size: 3.2rem;
 	line-height: 3.2rem;
+}
+
+footer {
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
 
 h1,
@@ -122,6 +130,10 @@ h2 {
 	margin-left: calc(1.8rem + 0.7rem);
 }
 
+/* h3 {
+	font-size: 2.4rem;
+} */
+
 h1:after,
 h2:after {
 	content: "";
@@ -139,4 +151,9 @@ h2:after {
 	top: 2.4rem;
 	left: calc(-1.8rem - 0.7rem);
 	width: 1.8rem;
+}
+
+pre {
+	white-space: pre-wrap;
+	word-break: keep-all;
 }

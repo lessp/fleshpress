@@ -76,7 +76,7 @@
             foreach($routeParts as $key => $routePart) {
                 if (strpos($routePart, ':') === 0) {
                     $paramName = substr($routePart, 1);
-                    $params[$paramName] = $pathParts[$key];
+                    $params[$paramName] = $pathParts[$key] ?? '';
                 }
             }
 
