@@ -1,96 +1,73 @@
 <?php
 
+    require_once('./utils/Singleton.php');
     require_once('Request.php');
     require_once('Response.php');
 
-    class Router
+    class Router extends Singleton
     {
         private static $ROUTES;
 
-        private $req;
+        private static $REQUEST_METHOD;
+        private static $REQUEST_URI;
 
         public function __construct()
-        {
-            self::$ROUTES = [
-                'GET' => [], 
-                'POST' => [],
-                'PUT' => []
-            ];
+        {}
 
-            $this->req = new Request($_SERVER);
-        }
-
-        public function get(string $route, $func, string $method = 'GET')
+        public static function add(string $route, $func, string $method) 
         {
             self::$ROUTES[$method][] = [
                 'route' => $route,
-                'function' => $func,
-                'params' => $this->extractParams($route, $this->req->path()) // sätt bara param
+                'func' => $func,
+                'urlVars' => self::extractURLVars($route)
             ];
         }
 
-        public function post(string $route, $func) { return $this->get($route, $func, 'POST'); }
-        public function put(string $route, $func) { return $this->get($route, $func, 'PUT'); }
-
-        private function execute(array $route, array $params = null)
-        {
-            if (! isset($route)) {
-                $res = new Response();
-                return $res->send('ERROR: Not found', 404);
-            }
-
-            // if ($params !== null) {
-            //     $this->req->setParams($params);
-            // }
-
-            $route['function'] (
-                $this->req,
-                new Response(),
-                $params
-            );
+        public static function getRoutes(): array {
+            return self::$ROUTES;
         }
 
-        private function match(array $routes, string $method)
-        {
-            foreach($routes[$method] as $key => $route)
-            {
-                if (empty($route['params'])) {
-
-                    if ($this->req->path() === $route['route'])
-                    {
-                        return $this->execute($route);
-                    }
-                } else {
-                    // TODO: see if path matches
-                    return $this->execute($route, $route['params']);
-                }
-            }
-        }
-
-        private function extractParams(string $route, string $path) 
+        private static function extractURLVars(string $route): array 
         {
             $routeParts = explode('/', $route);
-            $pathParts = explode('/', $path);
             $params = [];
-            
+
             foreach($routeParts as $key => $routePart) {
                 if (strpos($routePart, ':') === 0) {
                     $paramName = substr($routePart, 1);
-                    $params[$paramName] = $pathParts[$key];
+                    $params[$paramName] = '';
                 }
             }
 
             return $params;
         }
 
-        public function start()
+        private static function execute(array $route, array $params = null)
         {
-            echo '<pre>';
-                print_r(self::$ROUTES);
-            echo '</pre>';
-            $this->match(self::$ROUTES, $this->req->method());
+            $route['func'] (
+                new Request(self::$REQUEST_METHOD, self::$REQUEST_URI), 
+                new Response(), 
+                $params
+            );
         }
 
+        public static function match(string $path, string $method)
+        {
+            self::$REQUEST_METHOD = $method;
+            self::$REQUEST_URI = $path;
+
+            foreach(self::$ROUTES[$method] as $key => $route) {
+
+                if (empty($route['urlVars'])) {
+                    if ($path === $route['route']) {
+                        self::execute($route);
+                    }
+                } else {
+                    return self::execute($route, $route['urlVars']);
+                }
+
+            }
+        }
     }
 
 ?>

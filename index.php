@@ -4,16 +4,16 @@
     ini_set('display_startup_errors', 1);
     error_reporting(E_ALL);
 
-    require_once('./core/Router.php');
+    require_once('./core/App.php');
     require_once('./models/PostModel.php');
 
-    $route = new Router();
+    $app = new App();
 
-    $route->get('/', function($req, $res) {
+    $app->get('/', function($req, $res) {
         $res->render_template('start.html', ['req' => $req]);
     });
 
-    $route->get('/posts', function($req, $res) {
+    $app->get('/posts', function($req, $res) {
         $posts = Post::findAll();
         $post = Post::findById(1);
 
@@ -29,7 +29,7 @@
         ]);
     });
 
-    $route->post('/posts', function($req, $res) {
+    $app->post('/posts', function($req, $res) {
         try {
             $result = $req->body();
 
@@ -47,7 +47,7 @@
         }
     });
 
-    $route->get('/posts/:id', function($req, $res, $params) {
+    $app->get('/posts/:id', function($req, $res, $params) {
         try {
             $post = Post::findOneById($params['id']);
 
@@ -57,7 +57,7 @@
         }
     });
 
-    // $route->get('/posts/:id', function($req, $res, $params) {
+    // $app->get('/posts/:id', function($req, $res, $params) {
     //     try {
     //         $post = Post::findById($params['id']);
 
@@ -67,6 +67,6 @@
     //     }
     // });
 
-    $route->start();
+    $app->start();
 
 ?>
