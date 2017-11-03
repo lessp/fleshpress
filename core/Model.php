@@ -42,7 +42,52 @@
 
         public static function find(array $params)
         {
-            // TODO
+            try {
+                
+                $paramLength = count($params);
+                $paramsToUpdate = '';
+                $i = 0;
+
+                foreach($params as $key => $param) {
+                    if ($i === $paramLength - 1) {
+                        $paramsToUpdate .= $key . ' = :' . $key;
+                    } else {
+                        $paramsToUpdate .= $key . ' = :' . $key . ' AND ';
+                    }
+                    $i++;
+                }
+
+                $sql = (
+                    'SELECT * FROM ' . static::$tableName . ' WHERE ' . $paramsToUpdate
+                );
+
+                // echo '<pre>';
+                //     print_r('theSQLQuery: ' . $sql);
+                // echo '</pre>';
+
+                $statement = self::getDB()->prepare($sql);
+
+                foreach($params as $key => $param) {
+                    $params[':' . $key] = $param;
+                    unset($params[$key]);
+                }
+
+                if ($statement->execute($params)) {
+                    if ($statement->rowCount() > 1) {
+                        $results = $statement->fetchAll(PDO::FETCH_ASSOC);
+                    } else {
+                        $results = $statement->fetch(PDO::FETCH_ASSOC);
+                    }
+
+                    return $results;
+                } else {
+                    throw new Exception ("That's an error.");
+                }
+
+            } catch (PDOException $err) {
+                self::getDB()->rollBack();
+                return $err->getMessage();
+            }
         }
 
         public static function findById(int $id)

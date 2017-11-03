@@ -51,6 +51,11 @@
             return print($data);
         }
 
+        public function redirect(string $url)
+        {
+            return header('Location:'. $url);
+        }
+
         public function status(int $statusCode = null)
         {
             http_response_code($statusCode);
