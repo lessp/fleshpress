@@ -173,8 +173,8 @@
 
                 $i = 0;
                 $paramsLength = count($params);
-                $paramsToUpdate;
-                $paramsToUpdatePlaceholders;
+                $paramsToUpdate = '';
+                $paramsToUpdatePlaceholders = '';
                 foreach($params as $key => $param) {
                     if ($i === 0) {
                         $paramsToUpdate .= '(' . $key . ', ';

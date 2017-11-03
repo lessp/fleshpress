@@ -85,9 +85,6 @@
 
         public function start()
         {
-            echo '<pre>';
-                print_r(self::$ROUTES);
-            echo '</pre>';
             $this->match(self::$ROUTES, $this->req->method());
         }
 
