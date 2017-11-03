@@ -25,10 +25,11 @@ body {
 header {
 	display: flex;
 	align-items: center;
-	flex-direction: column;
+	/* flex-direction: column; */
 }
 
 header > nav {
+	margin-left: auto;
 }
 
 ul {
@@ -76,7 +77,7 @@ main {
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
-	align-items: center;
+	/* align-items: center; */
 }
 
 article {
