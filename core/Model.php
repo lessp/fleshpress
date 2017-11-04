@@ -25,12 +25,14 @@
     
                 if (! empty($results)) {
 
-                    $list = [];
-                    foreach($results as $item) {
-                        $list[] = $item;
-                    }
+                    return $results;
+
+                    // $list = [];
+                    // foreach($results as $item) {
+                    //     $list[] = $item;
+                    // }
     
-                    return $list;
+                    // return $list;
                 } else {
                     throw new Exception("Could not fetch results.");
                 }
@@ -73,6 +75,7 @@
                 }
 
                 if ($statement->execute($params)) {
+
                     if ($statement->rowCount() > 1) {
                         $results = $statement->fetchAll(PDO::FETCH_ASSOC);
                     } else {
@@ -80,6 +83,7 @@
                     }
 
                     return $results;
+                    
                 } else {
                     throw new Exception ("That's an error.");
                 }

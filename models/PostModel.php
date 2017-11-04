@@ -8,11 +8,12 @@
         protected static $tableName;
         protected $schema;
 
-        public function __construct(string $title, string $content)
+        public function __construct(string $title, string $content, int $userId)
         {
             $this->schema = [
                 'title' => $title,
-                'content' => $content
+                'content' => $content,
+                'user_id' => $userId
             ];
         }
 

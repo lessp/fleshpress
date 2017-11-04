@@ -8,6 +8,8 @@
     require_once('./core/Request.php');
 
     require_once('./models/PostModel.php');
+    require_once('./models/CategoryModel.php');
+    require_once('./models/PostCategoryModel.php');
     require_once('./models/UserModel.php');
 
     $app = new App();
@@ -39,10 +41,25 @@
         $res->render_template('start.html', ['req' => $req]);
     });
 
-    $app->get('/posts', 'isAuthed', function($req, $res) {
+    $app->get('/posts', function($req, $res) {
 
         $posts = Post::findAll();
         $post = Post::findById(1);
+
+        $categories = Category::findAll();
+        $postCategories = PostCategory::findAll();
+
+        foreach ($posts as $key => &$newPost) {
+            foreach ($postCategories as $postCategory) {
+                if ($newPost['id'] === $postCategory['post_id']) {
+                    foreach($categories as $category) {
+                        if($category['id'] === $postCategory['category_id']) {
+                            $newPost['category'] = $category['name'];
+                        }
+                    }
+                }
+            }
+        }
 
         $updatedPost = Post::findByIdAndUpdate(1, [
             'title' => 'Woohoo, brand new title!',
@@ -58,7 +75,9 @@
     });
 
     $app->get('/auth', 'isAuthed', function($req, $res) {
-        $res->render_template('auth.html', ['req' => $req]);
+        $categories = Category::findAll();
+
+        $res->render_template('auth.html', ['req' => $req, 'categories' => $categories]);
     });
 
     $app->post('/auth', function($req, $res) {
@@ -86,12 +105,20 @@
 
             $newPost = new Post(
                 $req->body['title'], 
-                $req->body['content']
+                $req->body['content'],
+                $req->cookies['id']
             );
             
             $postToReturn = $newPost->save();
 
-            $res->redirect('/posts');
+            $addPostCategory = new PostCategory(
+                $postToReturn['id'],
+                $req->body['category_id']
+            );
+
+            $addPostCategory->save();
+
+            $res->redirect('http://localhost:8080/posts');
 
         } catch (Exception $err) {
             $res->json($err->getMessage(), 400);
@@ -110,15 +137,30 @@
         }
     });
 
-    $app->get('/posts/:categoryID/:postID', function($req, $res) {
+    $app->get('/posts/:userID/:categoryID', function($req, $res) {
         try {
 
-            $res->json([
-                    'category' => $req->params['categoryID'],
-                    'post' => $req->params['postID']
-                ],
-                200
-            );
+            $userID = $req->params['userID'];
+            $categoryID = $req->params['categoryID'];
+
+            $postCategories = PostCategory::find(['category_id' => $categoryID]);
+
+            if (empty($postCategories)) {
+                throw new Exception("Woops. The arguments are probably out of range. Try again!");
+            }
+
+            $postsWithUserAndCategory = [];
+            foreach($postCategories as $postCategory) {
+                $postsWithUserAndCategory[] = Post::find(['id' => $postCategory['post_id'], 'user_id' => $userID]);
+            }
+            
+            $category = Category::find(['id' => $categoryID]);   
+            
+            foreach($postsWithUserAndCategory as &$newPost) {
+                $newPost['category'] = $category['name'];
+            }
+            
+            $res->json(['posts' => $postsWithUserAndCategory], 200);
 
         } catch (Exception $err) {
             $res->json($err->getMessage(), 400);

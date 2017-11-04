@@ -7,6 +7,13 @@
     <article>
         <form method="POST" action="/posts">
             <input type="text" name="title" placeholder="Enter a title" />
+            <select name="category_id">
+                <?php foreach($params['categories'] as $category): ?>
+                <option value="<?php echo $category['id'] ?>">
+                    <?php echo $category['name'] ?>
+                </option>
+                <?php endforeach; ?>
+            </select>
             <textarea type="text" name="content" placeholder="Add some content"></textarea>
             <button type="submit">Add post</button>
         </form>
