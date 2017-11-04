@@ -100,6 +100,10 @@
         ) 
         {
 
+            if (empty($params)) {
+                throw new Exception;
+            }
+
             try {
 
                 $paramLength = count($params);
