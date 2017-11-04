@@ -60,6 +60,14 @@ nav > ul > li > a:hover {
 	border-bottom: 2px solid slateblue;
 }
 
+nav > ul > li > a > span {
+	font-family: monospace;
+	font-size: 1.4rem;
+	display: inline-block;
+	margin-left: .4rem;
+	color: slateblue;
+}
+
 nav > ul > li > a:before {
 	/* content: '[' attr(data-req-method) ']'; */
 	position: absolute;

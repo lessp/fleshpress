@@ -54,7 +54,7 @@
             $res = new Response();
 
             foreach($route['funcs'] as $func) {
-                $func($req, $res, $params);
+                $func($req, $res);
             }
         }
 
@@ -64,6 +64,8 @@
             self::$REQUEST_URI = $path;
 
             foreach(self::$ROUTES[$method] as $key => $route) {
+
+                // TODO: run through all easy-paths first
 
                 if (empty($route['urlVars'])) {
                     if ($path === $route['route']) {
