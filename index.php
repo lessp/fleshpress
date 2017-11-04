@@ -14,7 +14,7 @@
 
     $app = new App();
 
-    class Sessions extends Request {
+    class SessionsMiddleware extends Request {
         
         private $data;
 
@@ -24,7 +24,7 @@
         }
     }
 
-    class SomethingElse extends Request {
+    class AnotherMiddleware extends Request {
         
         private $data;
 
@@ -34,8 +34,8 @@
         }
     }
 
-    $app->use(new Sessions);
-    $app->use(new SomethingElse);
+    $app->use(new SessionsMiddleware);
+    $app->use(new AnotherMiddleware);
 
     $app->get('/', function($req, $res) {
         $res->render_template('start.html', ['req' => $req]);
@@ -118,7 +118,7 @@
 
             $addPostCategory->save();
 
-            $res->redirect('http://localhost:8080/posts');
+            $res->redirect('/posts');
 
         } catch (Exception $err) {
             $res->json($err->getMessage(), 400);

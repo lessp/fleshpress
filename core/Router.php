@@ -17,7 +17,7 @@
 
         public static function add(string $route, $funcs, string $method) 
         {
-            self::$ROUTES[$method][] = [
+            self::$ROUTES[$method][$route] = [
                 'route' => $route,
                 'funcs' => $funcs,
                 'urlVars' => self::extractURLVars($route)
@@ -63,42 +63,41 @@
             self::$REQUEST_METHOD = $method;
             self::$REQUEST_URI = $path;
 
-            foreach(self::$ROUTES[$method] as $key => $route) {
+            if (array_key_exists($path, self::$ROUTES[$method])) {
+                return self::execute(self::$ROUTES[$method][$path]);
+            } else {
 
-                // TODO: run through all easy-paths first
-
-                if (empty($route['urlVars'])) {
-                    if ($path === $route['route']) {
-                        return self::execute($route);
+                foreach(self::$ROUTES[$method] as $key => $route) {
+                    
+                    if (empty($route['urlVars'])) {
+                        continue;
                     }
-                } else {
+
                     $purePath = substr($path, 1);
                     $pureRoute = substr($route['route'], 1);
-
+                    
                     $pathParts = explode('/', $purePath);
                     $routeParts = explode('/', $pureRoute);
-
+                    
                     if ((count($pathParts) - 1) === count($route['urlVars'])) {
                         if ($pathParts[0] === $routeParts[0]) {
-
+                            
                             unset($pathParts[0]);
-
+                            
                             $i = 1;
                             foreach($route['urlVars'] as $key => $urlVar) {
                                 $route['urlVars'][$key] = $pathParts[$i];
                                 $i++;
                             }
-
+                            
                             return self::execute($route, $route['urlVars']);
                         }   
                     }
-
                 }
-
             }
 
+            // No match
             $res = new Response();
-
             $res->render_template('error.html', [
                 'status_code' => 404, 
                 'message' => "Pretty sure that route does not exist. Duh!"
