@@ -47,6 +47,7 @@
 
         public static function findById(int $id)
         {
+            
             try {
                 $sql = 'SELECT * FROM ' . static::$tableName . ' WHERE id = :id';
                 $statement = self::getDB()->prepare($sql);
@@ -70,6 +71,7 @@
                 $sql = 'SELECT * FROM ' . static::$tableName . ' WHERE id = :id LIMIT 1';
                 $statement = self::getDB()->prepare($sql);
                 $statement->execute([':id' => $id]);
+
                 $result = $statement->fetch(PDO::FETCH_ASSOC);  
 
                 if (! empty($result)) {

@@ -67,22 +67,36 @@
 
                 if (empty($route['urlVars'])) {
                     if ($path === $route['route']) {
-                        self::execute($route);
+                        return self::execute($route);
                     }
                 } else {
-                    return self::execute($route, $route['urlVars']);
-                    // $purePath = substr($path, 1);
-                    // $pureRoute = substr($route['route'], 1);
+                    $purePath = substr($path, 1);
+                    $pureRoute = substr($route['route'], 1);
 
-                    // $pathParts = explode('/', $purePath);
+                    $pathParts = explode('/', $purePath);
+                    $routeParts = explode('/', $pureRoute);
 
-                    // echo "Route: \n";
-                    // var_dump($pathParts);
-                    // var_dump($pureRoute);
-                    // var_dump($route['urlVars']);
+                    if ((count($pathParts) - 1) === count($route['urlVars'])) {
+                        if ($pathParts[0] === $routeParts[0]) {
+
+                            unset($pathParts[0]);
+
+                            $i = 1;
+                            foreach($route['urlVars'] as $key => $urlVar) {
+                                $route['urlVars'][$key] = $pathParts[$i];
+                                $i++;
+                            }
+
+                            return self::execute($route, $route['urlVars']);
+                        }   
+                    }
+
                 }
 
             }
+
+            $res = new Response();
+            return $res->send('ERROR: Not found', 404);
         }
     }
 
