@@ -42,12 +42,56 @@
 
         public static function find(array $params)
         {
-            // TODO
+            try {
+                
+                $paramLength = count($params);
+                $paramsToUpdate = '';
+                $i = 0;
+
+                foreach($params as $key => $param) {
+                    if ($i === $paramLength - 1) {
+                        $paramsToUpdate .= $key . ' = :' . $key;
+                    } else {
+                        $paramsToUpdate .= $key . ' = :' . $key . ' AND ';
+                    }
+                    $i++;
+                }
+
+                $sql = (
+                    'SELECT * FROM ' . static::$tableName . ' WHERE ' . $paramsToUpdate
+                );
+
+                // echo '<pre>';
+                //     print_r('theSQLQuery: ' . $sql);
+                // echo '</pre>';
+
+                $statement = self::getDB()->prepare($sql);
+
+                foreach($params as $key => $param) {
+                    $params[':' . $key] = $param;
+                    unset($params[$key]);
+                }
+
+                if ($statement->execute($params)) {
+                    if ($statement->rowCount() > 1) {
+                        $results = $statement->fetchAll(PDO::FETCH_ASSOC);
+                    } else {
+                        $results = $statement->fetch(PDO::FETCH_ASSOC);
+                    }
+
+                    return $results;
+                } else {
+                    throw new Exception ("That's an error.");
+                }
+
+            } catch (PDOException $err) {
+                self::getDB()->rollBack();
+                return $err->getMessage();
+            }
         }
 
         public static function findById(int $id)
         {
-            
             try {
                 $sql = 'SELECT * FROM ' . static::$tableName . ' WHERE id = :id';
                 $statement = self::getDB()->prepare($sql);
@@ -71,7 +115,6 @@
                 $sql = 'SELECT * FROM ' . static::$tableName . ' WHERE id = :id LIMIT 1';
                 $statement = self::getDB()->prepare($sql);
                 $statement->execute([':id' => $id]);
-
                 $result = $statement->fetch(PDO::FETCH_ASSOC);  
 
                 if (! empty($result)) {
@@ -101,10 +144,6 @@
             string $idDenominator = 'id'
         ) 
         {
-
-            if (empty($params)) {
-                throw new Exception;
-            }
 
             try {
 
@@ -179,8 +218,8 @@
 
                 $i = 0;
                 $paramsLength = count($params);
-                $paramsToUpdate;
-                $paramsToUpdatePlaceholders;
+                $paramsToUpdate = '';
+                $paramsToUpdatePlaceholders = '';
                 foreach($params as $key => $param) {
                     if ($i === 0) {
                         $paramsToUpdate .= '(' . $key . ', ';

@@ -1,6 +1,6 @@
 <?php include_once 'header.html'; ?>
 
-<h1>templates -- posts.html</h1>
+<h1>posts</h1>
 
 <?php if (! empty($params['updatedPost'])) : ?>
     <h2 id="findByIdAndUpdate">Post::findByIdAndUpdate(1)</h2>
@@ -13,6 +13,7 @@
 <?php endif; ?>
 
 <h2 id="findAll">Post::findAll()</h2>
+<section class="posts">
 <?php foreach($params['posts'] as $post): ?>
     <article data-id="<?php echo $post['id']; ?>">
         <h3><?php echo $post['title']; ?></h3>
@@ -20,6 +21,7 @@
         <p><?php echo $post['content']; ?></p>
     </article>
 <?php endforeach; ?>
+</section>
 
 <h2 id="findById">Post::findById(1)</h2>
 <?php foreach($params['post'] as $post) : ?>

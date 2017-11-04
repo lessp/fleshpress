@@ -1,0 +1,33 @@
+<?php include_once 'header.html'; ?>
+
+<h1>auth</h1>
+
+<?php if ($params['req']->isAuthed): ?>
+    <h2>new Post($params)</h2>
+    <article>
+        <form method="POST" action="/posts">
+            <input type="text" name="title" placeholder="Enter a title" />
+            <textarea type="text" name="content" placeholder="Add some content"></textarea>
+            <button type="submit">Add post</button>
+        </form>
+    </article>
+    <?php else: ?>
+    <h2>User::find($params)</h2>
+    <article>
+        <form method="POST" action="">
+            <input type="text" name="username" placeholder="root" />
+            <input type="password" name="password" placeholder="password" />
+            <button type="submit">Sign in</button>
+        </form>
+    </article>
+    <?php endif; ?>
+<hr>
+
+<h2>$params</h2>
+<article>
+<pre>
+<?php print_r($params); ?>
+</pre>
+</article>
+
+<?php include_once 'footer.html'; ?>
