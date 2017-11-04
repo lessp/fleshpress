@@ -205,7 +205,12 @@ button {
 	border: 0;
 	appearance: none;
 	-webkit-appearance: none;
-	background: slateblue;
+	background-color: slateblue;
 	color: white;
 	cursor: pointer;
+	transition: background-color 150ms ease-out;
+}
+
+button:hover {
+	background-color: hsla(248, 53%, 52%, 1);
 }

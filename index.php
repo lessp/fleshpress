@@ -91,12 +91,15 @@
 
             if ($password === $userFound['password']) {
                 setcookie('id', $userFound['id'], time()+3600);
-
-                $res->redirect('/auth');
             }
+            
+            $res->redirect('/auth');
 
         } catch (Exception $err) {
-            $res->json($err->getMessage(), 400);
+            $res->render_template('error.html', [
+                'status_code' => 400, 
+                'message' => $err->getMessage()
+            ], 400);
         }
     });
 
