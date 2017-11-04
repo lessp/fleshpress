@@ -77,23 +77,24 @@
 
     $app->get('/posts/:id', function($req, $res, $params) {
         try {
-            $post = Post::findOneById($params['id']);
+            // $post = Post::findOneById($params['id']);
 
-            $res->render_template('post.html', ['post' => $post]);
+            // $res->render_template('post.html', ['post' => $post]);
+            echo $params;
         } catch (Exception $err) {
             $res->json($err->getMessage(), 400);
         }
     });
 
-    $app->get('/posts/:id', function($req, $res, $params) {
-        try {
-            $post = Post::findById($params['id']);
+    // $app->get('/posts/:id', function($req, $res, $params) {
+    //     try {
+    //         $post = Post::findById($params['id']);
 
-            $res->json($post, 200);
-        } catch (Exception $err) {
-            $res->json($err->getMessage(), 400);
-        }
-    });
+    //         $res->json($post, 200);
+    //     } catch (Exception $err) {
+    //         $res->json($err->getMessage(), 400);
+    //     }
+    // });
 
     // fake auth
     function requireLogin($req, $res) {

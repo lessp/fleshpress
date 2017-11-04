@@ -71,6 +71,15 @@
                     }
                 } else {
                     return self::execute($route, $route['urlVars']);
+                    // $purePath = substr($path, 1);
+                    // $pureRoute = substr($route['route'], 1);
+
+                    // $pathParts = explode('/', $purePath);
+
+                    // echo "Route: \n";
+                    // var_dump($pathParts);
+                    // var_dump($pureRoute);
+                    // var_dump($route['urlVars']);
                 }
 
             }
