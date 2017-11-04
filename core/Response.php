@@ -30,7 +30,7 @@
                 include($filePath);
             }
             $renderedView = ob_get_clean();
-            return print($renderedView);
+            return exit(print($renderedView));
         }
         
         public function render_template(string $template_path = null, array $params = [], int $statusCode = null)
@@ -48,7 +48,7 @@
 
             $data = json_encode($data, JSON_PRETTY_PRINT);
 
-            return print($data);
+            return exit(print($data));
         }
 
         public function status(int $statusCode = null)
@@ -63,7 +63,7 @@
                 http_response_code($statusCode);
             }
 
-            return print($data);
+            return exit(print($data));
         }
 
     }

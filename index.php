@@ -71,6 +71,14 @@
         }
     });
 
+    // fake auth
+    function requireLogin($req, $res) {
+        $isAuthed = false;
+        if (! $isAuthed) {
+            $res->json(["message" => "You need to be logged in."]);
+        }
+    }
+
     $app->start();
 
 ?>
