@@ -5,9 +5,34 @@
     error_reporting(E_ALL);
 
     require_once('./core/App.php');
+    require_once('./core/Request.php');
+
     require_once('./models/PostModel.php');
 
     $app = new App();
+
+    class Sessions extends Request {
+        
+        private $data;
+
+        public function __construct() {
+            $this->data['example_session_status'] = 'Session started';
+            $this->data['example_session_id'] = 'Session ID';
+        }
+    }
+
+    class SomethingElse extends Request {
+        
+        private $data;
+
+        public function __construct() {
+            $this->data['another_middleware_param'] = 'Some data';
+            $this->data['another_middleware_param2'] = 'Some other data';
+        }
+    }
+
+    $app->use(new Sessions);
+    $app->use(new SomethingElse);
 
     $app->get('/', function($req, $res) {
         $res->render_template('start.html', ['req' => $req]);
@@ -35,11 +60,10 @@
 
     $app->post('/posts', function($req, $res) {
         try {
-            $result = $req->body();
 
             $newPost = new Post(
-                $result->get('title'), 
-                $result->get('content')
+                $req->body['title'], 
+                $req->body['content']
             );
             
             $postToReturn = $newPost->save();

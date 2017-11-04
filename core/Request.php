@@ -1,36 +1,55 @@
 <?php
 
-    require_once('./core/FilteredMap.php');
+    class Request {
 
-    class Request
-    {
-        private $method;
-        private $path;
-        private $cookies;
-        private $body;
-        private $params;
+        private $data;
 
-        function __construct(string $requestMethod, string $requestedPath)
+        public function __construct(
+            string $method, 
+            string $path, 
+            ...$middleWares
+        ) 
         {
-            $this->method = $requestMethod;
-            $this->path = $requestedPath;
-            
-            switch ($this->method) {
-                case 'GET': $this->params = $_GET; break;
-                case 'POST': $this->body = $_POST; break;
+            $this->data['method'] = $method;
+            $this->data['path'] = $path;
+            $this->data['cookies'] = $_COOKIE;
+
+            switch ($method) {
+                case 'GET': $this->data['params'] = $_GET; break;
+                case 'POST': $this->data['body'] = $_POST; break;
                 case 'PUT': /* TODO */; break;
                 case 'DELETE': /* TODO */; break;
             }
             
-            $this->cookies = $_COOKIE;
+            foreach($middleWares as $middleWare) {
+                foreach($middleWare as $class) {
+                    $this->data[strtolower(get_class($class))] = $class;
+                }
+            }
         }
 
-        public function params(): array { return $this->params; }
-        public function method(): string { return $this->method; }
-        public function path(): string { return $this->path; }
-        public function cookies() { return $this->cookies; }
-        public function body(): FilteredMap { return $this->body; }
+        public function __set($name, $value)
+        {
+            $this->data[$name] = $value;
+        }
 
+        public function __get($name)
+        {
+
+        if (array_key_exists($name, $this->data)) {
+            return $this->data[$name];
+        }
+
+        $trace = debug_backtrace();
+            trigger_error(
+                'Undefined property via __get(): ' . $name .
+                ' in ' . $trace[0]['file'] .
+                ' on line ' . $trace[0]['line'],
+                E_USER_NOTICE
+            );
+
+            return null;
+        }
     }
 
 ?>

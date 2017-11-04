@@ -7,6 +7,7 @@
     class Router extends Singleton
     {
         private static $ROUTES;
+        private static $MIDDLEWARE;
 
         private static $REQUEST_METHOD;
         private static $REQUEST_URI;
@@ -21,6 +22,11 @@
                 'funcs' => $funcs,
                 'urlVars' => self::extractURLVars($route)
             ];
+        }
+
+        public static function addMiddleWare($middleWare) 
+        {
+            self::$MIDDLEWARE[] = $middleWare;
         }
 
         public static function getRoutes(): array {
@@ -44,7 +50,7 @@
 
         private static function execute(array $route, array $params = null)
         {
-            $req = new Request(self::$REQUEST_METHOD, self::$REQUEST_URI);
+            $req = new Request(self::$REQUEST_METHOD, self::$REQUEST_URI, self::$MIDDLEWARE);
             $res = new Response();
 
             foreach($route['funcs'] as $func) {
