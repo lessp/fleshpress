@@ -96,7 +96,11 @@
             }
 
             $res = new Response();
-            return $res->send('ERROR: Not found', 404);
+
+            $res->render_template('error.html', [
+                'status_code' => 404, 
+                'message' => "Pretty sure that route does not exist. Duh!"
+            ], 401);
         }
     }
 
