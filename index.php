@@ -87,8 +87,7 @@
 
     $app->get('/posts/:categoryID/:postID', function($req, $res, $params) {
         try {
-            $res->json(
-                [
+            $res->json([
                     'category' => $params['categoryID'],
                     'post' => $params['postID']
                 ],
