@@ -24,15 +24,7 @@
                 $results = $statement->fetchAll(PDO::FETCH_ASSOC);
     
                 if (! empty($results)) {
-
                     return $results;
-
-                    // $list = [];
-                    // foreach($results as $item) {
-                    //     $list[] = $item;
-                    // }
-    
-                    // return $list;
                 } else {
                     throw new Exception("Could not fetch results.");
                 }
@@ -47,20 +39,20 @@
             try {
                 
                 $paramLength = count($params);
-                $paramsToUpdate = '';
+                $paramsToLookFor = '';
                 $i = 0;
 
                 foreach($params as $key => $param) {
                     if ($i === $paramLength - 1) {
-                        $paramsToUpdate .= $key . ' = :' . $key;
+                        $paramsToLookFor .= $key . ' = :' . $key;
                     } else {
-                        $paramsToUpdate .= $key . ' = :' . $key . ' AND ';
+                        $paramsToLookFor .= $key . ' = :' . $key . ' AND ';
                     }
                     $i++;
                 }
 
                 $sql = (
-                    'SELECT * FROM ' . static::$tableName . ' WHERE ' . $paramsToUpdate
+                    'SELECT * FROM ' . static::$tableName . ' WHERE ' . $paramsToLookFor
                 );
 
                 // echo '<pre>';
@@ -83,7 +75,7 @@
                     }
 
                     return $results;
-                    
+
                 } else {
                     throw new Exception ("That's an error.");
                 }
@@ -222,18 +214,18 @@
 
                 $i = 0;
                 $paramsLength = count($params);
-                $paramsToUpdate = '';
-                $paramsToUpdatePlaceholders = '';
+                $paramsToSave = '';
+                $paramsToSavePlaceholders = '';
                 foreach($params as $key => $param) {
                     if ($i === 0) {
-                        $paramsToUpdate .= '(' . $key . ', ';
-                        $paramsToUpdatePlaceholders .= '(:' . $key . ', ';
+                        $paramsToSave .= '(' . $key . ', ';
+                        $paramsToSavePlaceholders .= '(:' . $key . ', ';
                     } elseif ($i === $paramsLength - 1) {
-                        $paramsToUpdate .= $key . ')';
-                        $paramsToUpdatePlaceholders .= ':' . $key . ')';
+                        $paramsToSave .= $key . ')';
+                        $paramsToSavePlaceholders .= ':' . $key . ')';
                     } else {
-                        $paramsToUpdate .= $key . ', ';
-                        $paramsToUpdatePlaceholders .= ':' . $key . ', ';
+                        $paramsToSave .= $key . ', ';
+                        $paramsToSavePlaceholders .= ':' . $key . ', ';
                     }
                   
                     $i++;
@@ -242,9 +234,9 @@
                 $sql = (
                     'INSERT INTO ' . static::$tableName . 
                     ' ' .
-                    $paramsToUpdate . 
+                    $paramsToSave . 
                     ' VALUES ' . 
-                    $paramsToUpdatePlaceholders
+                    $paramsToSavePlaceholders
                 );
 
                 self::getDB()->beginTransaction();
