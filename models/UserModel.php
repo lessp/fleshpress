@@ -8,9 +8,11 @@
         protected static $tableName;
         protected $schema;
 
-        public function __construct(string $username, string $password)
+        public function __construct(string $first_name, string $last_name, string $username, string $password)
         {
             $this->schema = [
+                'first_name' => $first_name,
+                'last_name' => $last_name,
                 'username' => $username,
                 'password' => $password
             ];

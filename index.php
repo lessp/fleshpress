@@ -55,6 +55,7 @@
                     foreach($categories as $category) {
                         if($category['id'] === $postCategory['category_id']) {
                             $newPost['category'] = $category['name'];
+                            $newPost['category_id'] = $category['id'];
                         }
                     }
                 }
@@ -70,6 +71,7 @@
             'posts' => $posts, 
             'post' => $post, 
             'updatedPost' => $updatedPost,
+            'categories' => $categories,
             'isAuthed' => $req->isAuthed
         ]);
     });
@@ -88,8 +90,8 @@
             ]);
 
             $password = $req->body['password'];
-
-            if ($password === $userFound['password']) {
+            
+            if (password_verify($password, $userFound['password'])) {
                 setcookie('id', $userFound['id'], time()+3600);
             }
             
@@ -103,7 +105,7 @@
         }
     });
 
-    $app->post('/posts', function($req, $res) {
+    $app->post('/posts', 'requireLogin', function($req, $res) {
         try {
 
             $newPost = new Post(
@@ -128,12 +130,33 @@
         }
     });
 
-    $app->get('/posts/:id', function($req, $res) {
+    $app->get('/post/:id', function($req, $res) {
         try {
 
             $post = Post::findOneById($req->params['id']);
 
             $res->render_template('post.html', ['post' => $post, 'req' => $req]);
+
+        } catch (Exception $err) {
+            $res->json($err->getMessage(), 400);
+        }
+    });
+
+    $app->get('/posts/:categoryID', function($req, $res) {
+        try {
+
+            $categoryID = $req->params['categoryID'];
+            
+            $postCategories = PostCategory::find(['category_id' => $categoryID]);
+            $categoryName = Category::findOneById($categoryID);
+
+            $posts;
+            foreach($postCategories as $key => $postCategory) {
+                $posts[$key] = Post::findOneById($postCategory['post_id']);
+                $posts[$key]['category'] = $categoryName['name'];
+            }
+
+            $res->render_template('category.html', ['posts' => $posts, 'req' => $req]);
 
         } catch (Exception $err) {
             $res->json($err->getMessage(), 400);
@@ -167,6 +190,27 @@
 
         } catch (Exception $err) {
             $res->json($err->getMessage(), 400);
+        }
+    });
+
+    $app->post('/user', function($req, $res) {
+        try {
+
+            $hashedPassword = generateHashedPassword($req->body['password']);
+            
+            $newUser = new User(
+                $req->body['first_name'],
+                $req->body['last_name'],
+                $req->body['username'],
+                $hashedPassword
+            );
+
+            $newUser->save();
+
+            $res->redirect('/auth');
+
+        } catch (Exception $err) {
+            $res->render_template('error.html', ['message' => $err->getMessage()], 500);
         }
     });
 
@@ -204,6 +248,14 @@
                 'message' => "Oops, seems as though you're not authorized to view this page."
             ], 401);
         }
+    }
+
+    function checkPasswordHash(string $hashedPassword, string $rawPassword) {
+
+    }
+
+    function generateHashedPassword(string $password) {
+        return password_hash($password, PASSWORD_DEFAULT, ['cost' => 12]);
     }
 
     $app->start();

@@ -2,6 +2,16 @@
 
 <h1>posts</h1>
 
+<!-- <ul>
+<?php foreach($params['categories'] as $category): ?>
+    <li>
+        <a href="<?php echo '/posts/' . $category['id']; ?>" title="<?php echo $category['name'] ?>">
+            <h3><?php echo strtolower($category['name']); ?></h3>
+        </a>
+    </li>
+<?php endforeach; ?>
+</ul> -->
+
 <?php if (! empty($params['updatedPost'])) : ?>
     <h2 id="findByIdAndUpdate">Post::findByIdAndUpdate(1)</h2>
     <article data-id="<?php echo $params['updatedPost']['id']; ?>">
@@ -17,7 +27,12 @@
 <?php foreach($params['posts'] as $post): ?>
     <article data-id="<?php echo $post['id']; ?>">
         <h3><?php echo $post['title']; ?></h3>
-        <span><strong>Category:</strong> <i><?php echo $post['category']; ?></i></span>
+        <span>
+            <strong>Category:</strong> 
+            <a href="<?php echo '/posts/' . $post['category_id']; ?>" title="<?php echo $post['category'] ?>">
+                <i><?php echo $post['category']; ?></i>
+            </a>
+        </span>
         <p><?php echo $post['content']; ?></p>
     </article>
 <?php endforeach; ?>
