@@ -102,6 +102,17 @@ $app->get('/posts', function($req, $res) {
     }
 });
 
+$app->get('/post/:id', function($req, $res) {
+    $post = BlogPostModel::findOneById($req->params['id'];
+
+    $res->json(['post' => $posts]);
+});
+
+$app->get('/post/:id/:anotherID', function($req, $res) {
+    $id = $req->params['id']; // eg. 1
+    $anotherID = $req->params['anotherID']; // eg. 3
+});
+
 $app->post('/post', function($req, $res) {
     try {
 
