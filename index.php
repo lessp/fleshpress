@@ -14,28 +14,22 @@
 
     $app = new App();
 
-    class SessionsMiddleware extends Request {
+    class SessionsMiddleware {
         
-        private $data;
+        private $settings;
 
-        public function __construct() {
-            $this->data['example_session_status'] = 'Session started';
-            $this->data['example_session_id'] = 'Session ID';
+        public function __construct(int $timeOut) {
+            $this->settings['timeOut'] = $timeOut;
+        }
+
+        public function __invoke(Request $req, Response $res) {
+            session_start();
+            
+            $req->helloWorld = 'Hello World!';
         }
     }
 
-    class AnotherMiddleware extends Request {
-        
-        private $data;
-
-        public function __construct() {
-            $this->data['another_middleware_param'] = 'Some data';
-            $this->data['another_middleware_param2'] = 'Some other data';
-        }
-    }
-
-    $app->use(new SessionsMiddleware);
-    $app->use(new AnotherMiddleware);
+    $app->use(new SessionsMiddleware(1000));
 
     $app->get('/', function($req, $res) {
         $res->render_template('start.html', ['req' => $req]);
@@ -108,22 +102,28 @@
     $app->post('/posts', 'requireLogin', function($req, $res) {
         try {
 
-            $newPost = new Post(
-                $req->body['title'], 
-                $req->body['content'],
-                $req->cookies['id']
-            );
-            
-            $postToReturn = $newPost->save();
+            if (! empty($req->body['title']) &&
+                ! empty($req->body['content'])) {
 
-            $addPostCategory = new PostCategory(
-                $postToReturn['id'],
-                $req->body['category_id']
-            );
+                    $newPost = new Post(
+                        $req->body['title'], 
+                        $req->body['content'],
+                        $req->cookies['id']
+                    );
+                    
+                    $postToReturn = $newPost->save();
+        
+                    $addPostCategory = new PostCategory(
+                        $postToReturn['id'],
+                        $req->body['category_id']
+                    );
+        
+                    $addPostCategory->save();
 
-            $addPostCategory->save();
+                    $res->redirect('/posts');
+            }
 
-            $res->redirect('/posts');
+            $res->redirect('/auth');
 
         } catch (Exception $err) {
             $res->json($err->getMessage(), 400);
@@ -226,7 +226,6 @@
         }
     });
 
-    // fake auth
     function isAuthed($req, $res) {
         if (isset($req->cookies['id'])) {
             $req->isAuthed = true;
@@ -248,10 +247,6 @@
                 'message' => "Oops, seems as though you're not authorized to view this page."
             ], 401);
         }
-    }
-
-    function checkPasswordHash(string $hashedPassword, string $rawPassword) {
-
     }
 
     function generateHashedPassword(string $password) {

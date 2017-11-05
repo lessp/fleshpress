@@ -1,6 +1,6 @@
 # 05-dynamisk-webbplats-php-lessp
 
-A very basic `PHP` MVC framework inspired by `Express (NodeJS)` and `Flask (Python)` made as my first PHP-assignment at [Chas Academy - Fullstack Web Developer.](https://chasacademy.se "Chas Academy").
+A very basic `PHP` MVC framework inspired by `Express (NodeJS)` and `Flask (Python)` made as my first PHP-assignment at [Chas Academy - Fullstack Web Developer](https://chasacademy.se "Chas Academy").
 
 ## Basic Route Example
 
@@ -103,9 +103,9 @@ $app->get('/posts', function($req, $res) {
 });
 
 $app->get('/post/:id', function($req, $res) {
-    $post = BlogPostModel::findOneById($req->params['id'];
+    $post = BlogPostModel::findOneById($req->params['id']);
 
-    $res->json(['post' => $posts]);
+    $res->json(['post' => $post]);
 });
 
 $app->get('/post/:id/:anotherID', function($req, $res) {
@@ -133,37 +133,10 @@ $app->post('/post', function($req, $res) {
 
 ## Middleware
 
-You can also add custom objects to the Request object.
+You can also add global middlewares like this.
 
 Eg.
 
 ```php
 $app->use(new SomeMiddleware);
-```
-
-```
-[req] => Request Object
-(
-    [data:Request:private] => Array
-    (
-        [method] => GET
-        [path] => /
-        [cookies] => Array()
-        [params] => Array
-            (
-                [GET] => Array()
-
-            )
-
-        [somemiddleware] => SomeMiddleware Object
-        (
-                [data:SessionsMiddleware:private] => Array
-                    (
-                        [example] => Example Middleware
-                    )
-
-                [data:Request:private] => 
-        )
-    )
-)
 ```

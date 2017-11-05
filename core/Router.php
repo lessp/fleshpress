@@ -50,8 +50,12 @@
 
         private static function execute(array $route, array $params = null)
         {
-            $req = new Request(self::$REQUEST_METHOD, self::$REQUEST_URI, $params, self::$MIDDLEWARE);
+            $req = new Request(self::$REQUEST_METHOD, self::$REQUEST_URI, $params);
             $res = new Response();
+
+            foreach(self::$MIDDLEWARE as $middleWare) {
+                $middleWare($req, $res);
+            }
 
             foreach($route['funcs'] as $func) {
                 $func($req, $res);

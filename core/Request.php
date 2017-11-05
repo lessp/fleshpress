@@ -7,8 +7,7 @@
         public function __construct(
             string $method, 
             string $path, 
-            array $urlVars = null,
-            ...$middleWares
+            array $urlVars = null
         ) 
         {
             $this->data['method'] = $method;
@@ -26,12 +25,6 @@
                 case 'POST': $this->data['body'] = $_POST; break;
                 case 'PUT': /* TODO */; break;
                 case 'DELETE': /* TODO */; break;
-            }
-            
-            foreach($middleWares as $middleWare) {
-                foreach($middleWare as $class) {
-                    $this->data[strtolower(get_class($class))] = $class;
-                }
             }
         }
 
