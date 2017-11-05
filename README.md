@@ -45,15 +45,18 @@ BlogPostModel::register();
 
 The base model currently supports the following queries.
 
-`BlogPostModel::findAll()`
-
-`BlogPostModel::find(array $params)`
-
-`BlogPostModel::findById(int $id)`
-
-`BlogPostModel::findOneById(int $id)`
-
-`BlogPostModel::findByIdAndUpdate(int $id, array $params, bool $returnUpdatedItem = false, string $idDenominator = 'id')`
+```php
+BlogPostModel::findAll();
+BlogPostModel::find(array $params);
+BlogPostModel::findById(int $id);
+BlogPostModel::findOneById(int $id);
+BlogPostModel::findByIdAndUpdate(
+    int $id, 
+    array $params, 
+    bool $returnUpdatedItem = false, 
+    string $idDenominator = 'id'
+);
+```
 
 To create a new Blog Post in this example we would use the following syntax:
 
