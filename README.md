@@ -1,10 +1,6 @@
 # 05-dynamisk-webbplats-php-lessp
 
-My first PHP assignment in Chas Academy - Fullstack Developer.
-
-___
-
-A very basic `PHP` MVC framework inspired by `Express (NodeJS)` and `Flask (Python)`. 
+This is a very basic `PHP` MVC framework inspired by `Express (NodeJS)` and `Flask (Python)` made as my first PHP-assignment at Chas Academy - Fullstack Web Developer.
 
 ## Basic Route Example
 
@@ -48,9 +44,13 @@ BlogPostModel::register();
 The base model currently supports the following queries.
 
 `BlogPostModel::findAll()`
+
 `BlogPostModel::find(array $params)`
+
 `BlogPostModel::findById(int $id)`
+
 `BlogPostModel::findOneById(int $id)`
+
 `BlogPostModel::findByIdAndUpdate(int $id, array $params, bool $returnUpdatedItem = false, string $idDenominator = 'id')`
 
 To create a new Blog Post in this example we would use the following syntax:
@@ -68,7 +68,7 @@ To create a new Blog Post in this example we would use the following syntax:
 
 To use a middleware function we can use the following syntax:
 
-```
+```php
 $app->get('/protected', 'requireLogin', function($req, $res) {
     $res->render_template('protected.html');
 });
