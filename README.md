@@ -10,6 +10,8 @@ $app = new App();
 $app->get('/', function($req, $res) {
     $res->send('Hello World!', 200);
 });
+
+$app->start();
 ```
 
 ## Models
@@ -77,7 +79,77 @@ function requireLogin($req, $res) {
     $isAuthed = false;
 
     if (! $isAuthed) {
-        $res->json(["message" => "Oops. It seems as though you're not logged in.], 401);
+        $res->json(["message" => "Oops. It seems as though you're not logged in."], 401);
     }
 }
+```
+
+## More Examples
+
+```php
+$app->get('/posts', function($req, $res) {
+    try {
+
+        $posts = BlogPostModel::findAll();
+
+        $res->render_template('posts.html', ['posts' => $posts]);
+
+    } catch (Exception $err) {
+        $res->render_template('error.html', ['message' => $err->getMessage()], 500)
+    }
+});
+
+$app->post('/post', function($req, $res) {
+    try {
+
+        $newPost = new BlogPostModel(
+            $req->body['title'],
+            $req->body['content']
+        );
+
+        $newPost->save();
+
+        $res->redirect('/posts');
+
+    } catch (Exception $err) {
+        $res->json(["message" => $err->getMessage()], 500);
+    }
+});
+```
+
+## Middleware
+
+You can also add custom objects to the Request object.
+
+Eg.
+
+```php
+$app->use(new SomeMiddleware);
+```
+
+```
+[req] => Request Object
+(
+    [data:Request:private] => Array
+    (
+        [method] => GET
+        [path] => /
+        [cookies] => Array()
+        [params] => Array
+            (
+                [GET] => Array()
+
+            )
+
+        [somemiddleware] => SomeMiddleware Object
+        (
+                [data:SessionsMiddleware:private] => Array
+                    (
+                        [example] => Example Middleware
+                    )
+
+                [data:Request:private] => 
+        )
+    )
+)
 ```
