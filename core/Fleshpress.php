@@ -2,7 +2,7 @@
 
     require_once('./core/Router.php');
 
-    class App
+    class Fleshpress
     {
         private static $router;
         

@@ -4,7 +4,7 @@
     ini_set('display_startup_errors', 1);
     error_reporting(E_ALL);
 
-    require_once('./core/App.php');
+    require_once('./core/Fleshpress.php');
     require_once('./core/Request.php');
 
     require_once('./models/PostModel.php');
@@ -12,7 +12,7 @@
     require_once('./models/PostCategoryModel.php');
     require_once('./models/UserModel.php');
 
-    $app = new App();
+    $app = new Fleshpress();
 
     class Session {
         
