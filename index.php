@@ -14,22 +14,71 @@
 
     $app = new App();
 
-    class SessionsMiddleware {
+    class Session {
         
-        private $settings;
+        private $_settings;
 
-        public function __construct(int $timeOut) {
-            $this->settings['timeOut'] = $timeOut;
+        public function __construct(
+            int $lifeTime = 3600,
+            string $path = '/',
+            string $domain = null,
+            bool $secure = false,
+            bool $httpOnly = false
+        ) {
+
+            $this->_settings['name'] = 'fleshpress_session';
+
+            $this->_settings['lifeTime'] = $lifeTime;
+            $this->_settings['path'] = $path;
+            $this->_settings['domain'] = $domain;
+            $this->_settings['secure'] = $secure;
+            $this->_settings['httpOnly'] = $httpOnly;
+
         }
 
         public function __invoke(Request $req, Response $res) {
-            session_start();
             
-            $req->helloWorld = 'Hello World!';
+            session_set_cookie_params(
+                $this->_settings['lifeTime'],
+                $this->_settings['path'],
+                $this->_settings['domain'],
+                $this->_settings['secure'],
+                $this->_settings['httpOnly']
+            );
+                    
+            session_name($this->_settings['name']);
+            session_start();
+
         }
+    
+        public function __set($name, $value)
+        {
+            $_SESSION[$this->_settings['name']][$name] = $value;
+        }
+
+        public function __get($name)
+        {
+
+            if (array_key_exists($name, $_SESSION[$this->_settings['name']])) {
+                return $_SESSION[$this->_settings['name']][$name];
+            }
+
+            return null;
+        }
+
+        public function __isset($name)
+        {
+            return isset($_SESSION[$this->_settings['name']][$name]);
+        }
+
+        public function __unset($name)
+        {
+            unset($_SESSION[$this->_settings['name']][$name]);
+        }
+
     }
 
-    $app->use(new SessionsMiddleware(1000));
+    $app->use(new Session());
 
     $app->get('/', function($req, $res) {
         $res->render_template('start.html', ['req' => $req]);
@@ -76,6 +125,12 @@
         $res->render_template('auth.html', ['req' => $req, 'categories' => $categories]);
     });
 
+    $app->get('/auth/logout', 'isAuthed', function($req, $res) {
+        unset($req->session->user);
+
+        $res->redirect('/auth');
+    });
+
     $app->post('/auth', function($req, $res) {
         try {
 
@@ -86,7 +141,14 @@
             $password = $req->body['password'];
             
             if (password_verify($password, $userFound['password'])) {
-                setcookie('id', $userFound['id'], time()+3600);
+
+                $req->session->user = [
+                    'id' => $userFound['id'],
+                    'first_name' => $userFound['first_name'],
+                    'last_name' => $userFound['last_name'],
+                    'username' => $userFound['username']
+                ];
+            
             }
             
             $res->redirect('/auth');
@@ -216,7 +278,7 @@
 
     $app->get('/admin', 'requireLogin', function ($req, $res) {
         try {
-            $userFound = User::findOneById($req->cookies['id']);
+            $userFound = User::findOneById($req->session->user['id']);
     
             unset($userFound['password']);
     
@@ -227,7 +289,8 @@
     });
 
     function isAuthed($req, $res) {
-        if (isset($req->cookies['id'])) {
+
+        if (isset($req->session->user)) {
             $req->isAuthed = true;
         } else {
             $req->isAuthed = false;
@@ -235,7 +298,8 @@
     }
 
     function requireLogin($req, $res) {
-        if (isset($req->cookies['id'])) {
+
+        if (isset($req->session->user)) {
             $req->isAuthed = true;
         } else {
             $req->isAuthed = false;
