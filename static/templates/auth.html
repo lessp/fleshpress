@@ -4,7 +4,7 @@
 
 
 <?php if ($params['req']->isAuthed): ?>
-    <h2>new Post($params)<a class="button" style="float: right;" href="/auth/logout" title="auth/logout">auth/logout</a></h2>
+    <h2 style="display: flex; align-items: center;">new Post($params)<a class="button" style="margin-left: auto;" href="/auth/logout" title="auth/logout">auth/logout</a></h2>
     <article>
         <form method="POST" action="/posts">
             <input type="text" name="title" placeholder="Enter a title" />

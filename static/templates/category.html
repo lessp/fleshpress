@@ -1,13 +1,33 @@
 <?php include_once 'header.html'; ?>
 
-<h1>posts/:categoryID</h1>
+<h1>category/:id</h1>
 
-<h2 id="findAll"><?php echo strtolower($params['posts'][0]['category']); ?></h2>
+<h2 id="findAll" style="display: flex; align-items: center;"><?php echo strtolower($params['posts'][0]['category']); ?>
+<ul style="display: inline-block; margin-left: auto;">
+    <li>
+        <a class="button" href="/posts" title="all">
+            all
+        </a>
+    </li>
+<?php foreach($params['categories'] as $category): ?>
+    <li>
+        <a class="button" href="<?php echo '/category/' . $category['id']; ?>" title="<?php echo $category['name'] ?>">
+            <?php echo strtolower($category['name']); ?>
+        </a>
+    </li>
+<?php endforeach; ?>
+</ul>
+</h2>
 <section class="posts">
 <?php foreach($params['posts'] as $post): ?>
     <article data-id="<?php echo $post['id']; ?>">
         <h3><?php echo $post['title']; ?></h3>
-        <span><strong>Category:</strong> <i><?php echo $post['category']; ?></i></span>
+        <span>
+            <strong>Category:</strong> 
+            <a href="<?php echo '/posts/' . $params['categoryId']; ?>" title="<?php echo $post['category'] ?>">
+                <i><?php echo $post['category']; ?></i>
+            </a>
+        </span>
         <p><?php echo $post['content']; ?></p>
     </article>
 <?php endforeach; ?>

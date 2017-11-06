@@ -78,13 +78,15 @@ $app->get('/post/:id', function($req, $res) {
     }
 });
 
-$app->get('/posts/:categoryID', function($req, $res) {
+$app->get('/category/:id', function($req, $res) {
     try {
 
-        $categoryID = $req->params['categoryID'];
+        $categoryID = $req->params['id'];
         
         $postCategories = PostCategory::find(['category_id' => $categoryID]);
         $categoryName = Category::findOneById($categoryID);
+
+        $categories = Category::findAll();
 
         $posts;
         foreach($postCategories as $key => $postCategory) {
@@ -92,7 +94,7 @@ $app->get('/posts/:categoryID', function($req, $res) {
             $posts[$key]['category'] = $categoryName['name'];
         }
 
-        $res->render_template('category.html', ['posts' => $posts, 'req' => $req]);
+        $res->render_template('category.html', ['posts' => $posts, 'categories' => $categories, 'categoryId' => $categoryID, 'req' => $req]);
 
     } catch (Exception $err) {
         $res->json($err->getMessage(), 400);
