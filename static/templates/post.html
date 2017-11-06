@@ -2,6 +2,7 @@
 
 <h1>post/:id</h1>
 
+<?php if (! $params['isAuthed']): ?>
 <h2 id="findById">Post::findOneById(<?php echo $params['post']['id']; ?>)</h2>
 <article data-id="<?php echo $params['post']['id']; ?>">
     <h3><?php echo $params['post']['title']; ?></h3>
@@ -9,6 +10,32 @@
     <p><?php echo $params['post']['content']; ?></p>
 </article>
 <hr>
+<?php else: ?>
+<h2>Post::findByIdAndUpdate</h2>
+<article>
+    <form method="POST" action="" enctype="application/x-www-form-urlencoded">
+        <input type="hidden" name="_method" value="PUT" />
+        <input type="text" name="title" value="<?php echo $params['post']['title']; ?>" />
+        <select name="category_id">
+            <?php foreach($params['categories'] as $category): ?>
+
+            <?php if($params['postCategory'] === $category['id']): ?>
+                <option selected value="<?php echo $category['id'] ?>">
+                    <?php echo $category['name'] ?>
+                </option>
+            <?php else: ?>
+                <option value="<?php echo $category['id'] ?>">
+                    <?php echo $category['name'] ?>
+                </option>
+            <?php endif; ?>
+
+            <?php endforeach; ?>
+        </select>
+        <textarea type="text" name="content"><?php echo $params['post']['content']; ?></textarea>
+        <button type="submit">Update post</button>
+    </form>
+</article>
+<?php endif; ?>
 
 <h2>$params</h2>
 <article>

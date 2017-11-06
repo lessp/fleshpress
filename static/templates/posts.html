@@ -5,7 +5,11 @@
 <?php if (! empty($params['updatedPost'])) : ?>
     <h2 id="findByIdAndUpdate">Post::findByIdAndUpdate(1)</h2>
     <article data-id="<?php echo $params['updatedPost']['id']; ?>">
-        <h3><?php echo $params['updatedPost']['title']; ?></h3>
+        <h3>
+            <a href="/post/<?php echo $params['updatedPost']['id']; ?>">
+                <?php echo $params['updatedPost']['title']; ?>
+            </a>
+        </h3>
         <!-- <span><?php echo $params['updatedPost']['author']; ?></span> -->
         <p><?php echo $params['updatedPost']['content']; ?></p>
     </article>
@@ -31,7 +35,11 @@
 <section class="posts">
 <?php foreach($params['posts'] as $post): ?>
     <article data-id="<?php echo $post['id']; ?>">
-        <h3><?php echo $post['title']; ?></h3>
+        <h3>
+            <a href="/post/<?php echo $post['id']; ?>">
+                <?php echo $post['title']; ?>
+            </a>
+        </h3>
         <span>
             <strong>Category:</strong> 
             <a href="<?php echo '/category/' . $post['category_id']; ?>" title="<?php echo $post['category'] ?>">
@@ -46,7 +54,11 @@
 <h2 id="findById">Post::findById(1)</h2>
 <?php foreach($params['post'] as $post) : ?>
     <article data-id="<?php echo $post['id']; ?>">
-        <h3><?php echo $post['title']; ?></h3>
+        <h3>
+            <a href="/post/<?php echo $post['id']; ?>">
+                <?php echo $post['title']; ?>
+            </a>
+        </h3>
         <p><?php echo $post['content']; ?></p>
     </article>
 <?php endforeach; ?>

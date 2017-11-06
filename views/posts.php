@@ -66,15 +66,52 @@ $app->post('/posts', 'requireLogin', function($req, $res) {
     }
 });
 
-$app->get('/post/:id', function($req, $res) {
+$app->get('/post/:id', 'isAuthed', function($req, $res) {
     try {
 
         $post = Post::findOneById($req->params['id']);
+        $categories = Category::findAll();
+        $postCategory = PostCategory::find(['post_id' => $req->params['id']]);
 
-        $res->render_template('post.html', ['post' => $post, 'req' => $req]);
+        $res->render_template('post.html', [
+            'post' => $post, 
+            'categories' => $categories,
+            'postCategory' => $postCategory['category_id'],
+            'req' => $req, 
+            'isAuthed' => $req->isAuthed]
+        );
 
     } catch (Exception $err) {
-        $res->json($err->getMessage(), 400);
+        $res->render_template('error.html', [
+            'status_code' => 500, 
+            'message' => $err->getMessage()
+        ], 500);
+    }
+});
+
+$app->put('/post/:id', 'requireLogin', function($req, $res) {
+    try {
+
+        $postId = $req->params['id'];
+        $categoryId = $req->body['category_id'];
+
+        $updatedPost = Post::findByIdAndUpdate($postId, [
+            'title' => $req->body['title'],
+            'content' => $req->body['content'],
+            'user_id' => $req->session->user['id']
+        ]);
+
+        $updatedPostCategory = PostCategory::findByIdAndUpdate($postId, [
+            'category_id' => $req->body['category_id']
+        ], false, 'post_id');
+
+        $res->redirect('/post/' . $postId);
+
+    } catch (Exception $err) {
+        $res->render_template('error.html', [
+            'status_code' => 500, 
+            'message' => $err->getMessage()
+        ], 500);
     }
 });
 
@@ -97,7 +134,10 @@ $app->get('/category/:id', function($req, $res) {
         $res->render_template('category.html', ['posts' => $posts, 'categories' => $categories, 'categoryId' => $categoryID, 'req' => $req]);
 
     } catch (Exception $err) {
-        $res->json($err->getMessage(), 400);
+        $res->render_template('error.html', [
+            'status_code' => 500, 
+            'message' => $err->getMessage()
+        ], 500);
     }
 });
 

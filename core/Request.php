@@ -24,7 +24,16 @@
             switch ($method) {
                 case 'GET': $this->data['params']['GET'] = $_GET; break;
                 case 'POST': $this->data['body'] = $_POST; break;
-                case 'PUT': /* TODO */; break;
+                case 'PUT': 
+            
+                    if (! empty(parse_str(file_get_contents('php://input'), $_PUT))) 
+                    {
+                        $this->data['body'] = parse_str(file_get_contents('php://input'), $_PUT); 
+                    } else {
+                        $this->data['body'] = $_POST;
+                    }
+                
+                    break;
                 case 'DELETE': /* TODO */; break;
             }
 

@@ -3,7 +3,7 @@
     $app->get('/auth', 'isAuthed', function($req, $res) {
         $categories = Category::findAll();
 
-        $res->render_template('auth.html', ['req' => $req, 'categories' => $categories]);
+        $res->render_template('auth.html', ['user' => $req->session->user, 'req' => $req, 'categories' => $categories]);
     });
 
     $app->get('/auth/logout', 'isAuthed', function($req, $res) {
@@ -42,7 +42,7 @@
         }
     });
 
-    $app->post('/user', function($req, $res) {
+    $app->post('/user', 'requireLogin', function($req, $res) {
         try {
 
             $hashedPassword = generateHashedPassword($req->body['password']);
@@ -63,11 +63,11 @@
         }
     });
 
-    $app->get('/admin', 'requireLogin', function ($req, $res) {
+    $app->get('/psst', 'requireLogin', function ($req, $res) {
         try {
             $userFound = User::findOneById($req->session->user['id']);
     
-            $res->render_template('admin.html', ['user' => $req->session->user]);
+            $res->render_template('psst.html', ['user' => $req->session->user]);
         } catch (Exception $err) {
             $res->json(["message" => "Oops. Something went wrong."]);
         }

@@ -143,6 +143,7 @@
 
             try {
 
+                
                 $paramLength = count($params);
                 $paramsToUpdate = '';
                 $i = 0;
@@ -154,21 +155,21 @@
                     }
                     $i++;
                 }
-
+                
                 $sql = (
                     'UPDATE ' . static::$tableName . 
                     ' SET ' .
                     $paramsToUpdate . 
                     ' WHERE ' . $idDenominator . ' = :' . $idDenominator
                 );
-
+                
                 // echo '<pre>';
                 //     print_r('theSQLQuery: ' . $sql);
                 // echo '</pre>';
-
+                
                 self::getDB()->beginTransaction();
                 $statement = self::getDB()->prepare($sql);
-
+                
                 foreach($params as $key => $param) {
                     $params[':' . $key] = $param;
                     unset($params[$key]);

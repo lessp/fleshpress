@@ -1,25 +1,33 @@
 <?php include_once 'header.html'; ?>
 
-<h1>auth</h1>
 
 
 <?php if ($params['req']->isAuthed): ?>
-    <h2 style="display: flex; align-items: center;">new Post($params)<a class="button" style="margin-left: auto;" href="/auth/logout" title="auth/logout">auth/logout</a></h2>
-    <article>
-        <form method="POST" action="/posts">
-            <input type="text" name="title" placeholder="Enter a title" />
-            <select name="category_id">
-                <?php foreach($params['categories'] as $category): ?>
-                <option value="<?php echo $category['id'] ?>">
-                    <?php echo $category['name'] ?>
-                </option>
-                <?php endforeach; ?>
-            </select>
-            <textarea type="text" name="content" placeholder="Add some content"></textarea>
-            <button type="submit">Add post</button>
-        </form>
-    </article>
-    <?php else: ?>
+<h1>admin</h1>
+<h2><?php echo $params['user']['username']; ?><a class="button" style="float: right;" href="/auth/logout" title="auth/logout">auth/logout</a></h2>
+<article>
+    <p>
+        Welcome back <?php echo $params['user']['first_name'] ?>  <?php echo $params['user']['last_name']; ?>!
+    </p>
+</article>
+<hr>
+<h2>new Post($params)</h2>
+<article>
+    <form method="POST" action="/posts">
+        <input type="text" name="title" placeholder="Enter a title" />
+        <select name="category_id">
+            <?php foreach($params['categories'] as $category): ?>
+            <option value="<?php echo $category['id'] ?>">
+                <?php echo $category['name'] ?>
+            </option>
+            <?php endforeach; ?>
+        </select>
+        <textarea type="text" name="content" placeholder="Add some content"></textarea>
+        <button type="submit">Add post</button>
+    </form>
+</article>
+<?php else: ?>
+    <h1>auth</h1>
     <h2>User::find($params)</h2>
     <article>
         <form method="POST" action="">

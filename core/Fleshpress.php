@@ -24,7 +24,13 @@
         }
         
         public function start() {
-            router::match($_SERVER['REQUEST_URI'], $_SERVER['REQUEST_METHOD']);
+            // shame
+            $requestMethod = $_SERVER['REQUEST_METHOD'];
+            if (isset($_POST['_method'])) {
+                $requestMethod = $_POST['_method'];
+            };
+
+            router::match($_SERVER['REQUEST_URI'], $requestMethod);
         }
     }
 ?>
