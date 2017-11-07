@@ -125,13 +125,23 @@ $app->get('/category/:id', function($req, $res) {
 
         $categories = Category::findAll();
 
-        $posts;
-        foreach($postCategories as $key => $postCategory) {
-            $posts[$key] = Post::findOneById($postCategory['post_id']);
-            $posts[$key]['category'] = $categoryName['name'];
+        $posts = [];
+        if (! empty($postCategories)) {
+            $i = 0;
+            foreach($postCategories as $postCategory) {
+                $posts[$i] = Post::findOneById($postCategory['post_id']);
+                $posts[$i]['category'] = $categoryName['name'];
+                $i++;
+            }
         }
 
-        $res->render_template('category.html', ['posts' => $posts, 'categories' => $categories, 'categoryId' => $categoryID, 'req' => $req]);
+        $res->render_template('category.html', [
+            'posts' => $posts, 
+            'categories' => $categories, 
+            'categoryId' => $categoryID,
+            'categoryName' => $categoryName['name'],
+            'req' => $req
+        ]);
 
     } catch (Exception $err) {
         $res->render_template('error.html', [

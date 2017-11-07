@@ -3,7 +3,11 @@
     $app->get('/auth', 'isAuthed', function($req, $res) {
         $categories = Category::findAll();
 
-        $res->render_template('auth.html', ['user' => $req->session->user, 'req' => $req, 'categories' => $categories]);
+        $res->render_template('auth.html', [
+            'user' => $req->session->user, 
+            'req' => $req, 
+            'categories' => $categories
+        ]);
     });
 
     $app->get('/auth/logout', 'isAuthed', function($req, $res) {

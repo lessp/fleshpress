@@ -4,7 +4,7 @@
 
 <?php if ($params['req']->isAuthed): ?>
 <h1>admin</h1>
-<h2><?php echo $params['user']['username']; ?><a class="button" style="float: right;" href="/auth/logout" title="auth/logout">auth/logout</a></h2>
+<h2>@<?php echo $params['user']['username']; ?><a class="button" style="float: right;" href="/auth/logout" title="auth/logout">auth/logout</a></h2>
 <article>
     <p>
         Welcome back <?php echo $params['user']['first_name'] ?>  <?php echo $params['user']['last_name']; ?>!

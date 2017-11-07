@@ -47,10 +47,12 @@
 
         public function __get($name)
         {
-
-            if (array_key_exists($name, $_SESSION[$this->_settings['name']])) {
-                return $_SESSION[$this->_settings['name']][$name];
+            if (! empty($_SESSION[$this->_settings['name']])) {
+                if (array_key_exists($name, $_SESSION[$this->_settings['name']])) {
+                    return $_SESSION[$this->_settings['name']][$name];
+                }
             }
+
 
             return null;
         }
