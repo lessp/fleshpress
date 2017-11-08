@@ -24,6 +24,8 @@
                 http_response_code($statusCode);
             }
 
+            extract($params);
+
             ob_start();
             if (file_exists($filePath)) 
             {

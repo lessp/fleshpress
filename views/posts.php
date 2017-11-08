@@ -2,9 +2,9 @@
 
 $app->get('/posts', function($req, $res) {
 
-    $posts = Post::findAll();
     $post = Post::findById(1);
-
+    
+    $posts = Post::findAll();
     $categories = Category::findAll();
     $postCategories = PostCategory::findAll();
 
@@ -177,7 +177,11 @@ $app->get('/posts/:userID/:categoryID', function($req, $res) {
         $res->json(['posts' => $postsWithUserAndCategory], 200);
 
     } catch (Exception $err) {
-        $res->json($err->getMessage(), 400);
+        $res->render_template('error.html', [
+            'status_code' => 500, 
+            'message' => $err->getMessage()
+        ], 500);
+        // $res->json($err->getMessage(), 400);
     }
 });
 

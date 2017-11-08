@@ -2,7 +2,7 @@
 
 <h1>post/:id</h1>
 
-<?php if (! $params['isAuthed']): ?>
+<?php if (! $isAuthed): ?>
 <h2 id="findById">Post::findOneById(<?php echo $params['post']['id']; ?>)</h2>
 <article data-id="<?php echo $params['post']['id']; ?>">
     <h3><?php echo $params['post']['title']; ?></h3>

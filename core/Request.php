@@ -37,10 +37,14 @@
                 case 'DELETE': /* TODO */; break;
             }
 
-            foreach($middleWares as $middleWare) {
-                foreach($middleWare as $class) {
-                    $this->data[strtolower(get_class($class))] = $class;
+            if ($middleWares[0] !== null) {
+
+                foreach($middleWares as $middleWare) {
+                    foreach($middleWare as $class) {
+                        $this->data[strtolower(get_class($class))] = $class;
+                    }
                 }
+                
             }
         }
 

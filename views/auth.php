@@ -2,11 +2,13 @@
 
     $app->get('/auth', 'isAuthed', function($req, $res) {
         $categories = Category::findAll();
+        $tags = Tags::findAll();
 
         $res->render_template('auth.html', [
             'user' => $req->session->user, 
             'req' => $req, 
-            'categories' => $categories
+            'categories' => $categories,
+            'tags' => $tags
         ]);
     });
 

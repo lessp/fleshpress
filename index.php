@@ -14,6 +14,8 @@
     require_once('./models/CategoryModel.php');
     require_once('./models/PostCategoryModel.php');
     require_once('./models/UserModel.php');
+    require_once('./models/TagModel.php');
+    require_once('./models/PostTagsModel.php');
 
     $app = new Fleshpress();
 

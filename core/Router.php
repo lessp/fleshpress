@@ -12,6 +12,8 @@
         private static $REQUEST_METHOD;
         private static $REQUEST_URI;
 
+        private static $__startTime;
+
         public function __construct()
         {}
 
@@ -49,14 +51,16 @@
         }
 
         private static function execute(array $route, array $params = null)
-        {
+        {   
             $req = new Request(self::$REQUEST_METHOD, self::$REQUEST_URI, $params, self::$MIDDLEWARE);
             $res = new Response();
-
-            foreach(self::$MIDDLEWARE as $middleWare) {
-                $middleWare($req, $res);
-            }
-
+            
+            if (! empty(self::$MIDDLEWARE)) {
+                foreach(self::$MIDDLEWARE as $middleWare) {
+                    $middleWare($req, $res);
+                }
+            } 
+            
             foreach($route['funcs'] as $func) {
                 $func($req, $res);
             }
@@ -82,7 +86,7 @@
                     
                     $pathParts = explode('/', $purePath);
                     $routeParts = explode('/', $pureRoute);
-                    
+
                     if ((count($pathParts) - 1) === count($route['urlVars'])) {
                         if ($pathParts[0] === $routeParts[0]) {
                             
@@ -93,7 +97,7 @@
                                 $route['urlVars'][$key] = $pathParts[$i];
                                 $i++;
                             }
-                            
+
                             return self::execute($route, $route['urlVars']);
                         }   
                     }
