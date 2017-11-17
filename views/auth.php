@@ -13,7 +13,7 @@
     });
 
     $app->get('/auth/logout', 'isAuthed', function($req, $res) {
-        unset($req->session->user);
+        $req->session->user = null;
 
         $res->redirect('/auth');
     });

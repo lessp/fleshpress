@@ -155,7 +155,7 @@
                     }
                     $i++;
                 }
-                
+
                 $sql = (
                     'UPDATE ' . static::$tableName . 
                     ' SET ' .
