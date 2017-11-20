@@ -2,24 +2,10 @@
 
 $app->get('/posts', function($req, $res) {
 
-    $post = Post::findById(1);
+    $post = Post::findOneById(1);
     
-    $posts = Post::findAll();
     $categories = Category::findAll();
-    $postCategories = PostCategory::findAll();
-
-    foreach ($posts as $key => &$newPost) {
-        foreach ($postCategories as $postCategory) {
-            if ($newPost['id'] === $postCategory['post_id']) {
-                foreach($categories as $category) {
-                    if($category['id'] === $postCategory['category_id']) {
-                        $newPost['category'] = $category['name'];
-                        $newPost['category_id'] = $category['id'];
-                    }
-                }
-            }
-        }
-    }
+    $posts = Post::findAll();
 
     $updatedPost = Post::findByIdAndUpdate(1, [
         'title' => 'Woohoo, brand new title!',
@@ -69,14 +55,13 @@ $app->post('/posts', 'requireLogin', function($req, $res) {
 $app->get('/post/:id', 'isAuthed', function($req, $res) {
     try {
 
+        // $post = Post::findOneById($req->params['id']);
         $post = Post::findOneById($req->params['id']);
         $categories = Category::findAll();
-        $postCategory = PostCategory::find(['post_id' => $req->params['id']]);
 
         $res->render_template('post.html', [
             'post' => $post, 
             'categories' => $categories,
-            'postCategory' => $postCategory['category_id'],
             'req' => $req, 
             'isAuthed' => $req->isAuthed]
         );
@@ -145,11 +130,62 @@ $app->get('/category/:id', function($req, $res) {
 
     } catch (Exception $err) {
         $res->render_template('error.html', [
-            'status_code' => 500, 
+            'status_code' => 404, 
             'message' => $err->getMessage()
         ], 500);
     }
 });
+
+$app->get('/tag/:id', function($req, $res) {
+    try {
+
+        $tagID = $req->params['id'];
+        
+        $postsToFind = PostTags::findById($tagID);
+        $tags = Tags::findAll();
+        $tagName = Tags::findOneById($tagID);
+
+        $posts = [];
+        foreach($postsToFind as $post) {
+            $posts[] = Post::findOneById($post['post_id']);
+        }
+
+        $res->render_template('tag.html', [
+            'posts' => $posts, 
+            'tags' => $tags, 
+            'tagId' => $tagID,
+            'tagName' => $tagName['name'],
+            'req' => $req
+        ]);
+
+    } catch (Exception $err) {
+        $res->render_template('error.html', [
+            'status_code' => 404, 
+            'message' => "Pretty sure that route does not exist. Duh!"
+        ], 404);
+    }
+});
+
+// $app->get('/posts/:user/:userId', function($req, $res) {
+
+//     if ($req->params['user'] !== 'user') {
+//         $res->render_template('error.html', [
+//             'status_code' => 404, 
+//             'message' => "Pretty sure that route does not exist. Duh!"
+//         ], 404);
+//     }
+
+//     try {
+
+//         $res->send('Yeah yeah..');
+
+//     } catch (Exception $err) {
+//         $res->render_template('error.html', [
+//             'status_code' => 500, 
+//             'message' => $err->getMessage()
+//         ], 500);   
+//     }
+// });
 
 $app->get('/posts/:userID/:categoryID', function($req, $res) {
     try {

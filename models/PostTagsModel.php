@@ -21,6 +21,27 @@
             static::$tableName = 'post_tags';
         }
 
+        public static function findById(int $tagId) {
+            $query = 'SELECT DISTINCT t.id, pt.post_id as post_id 
+            FROM tags t
+                LEFT JOIN post_tags pt ON t.id = pt.tag_id
+            WHERE t.id = :tagId
+            GROUP BY post_id';
+
+            $statement = static::getDB()->prepare($query);
+            $statement->bindValue(':tagId', $tagId);
+            $statement->execute();
+
+            $posts = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+            if (! empty($posts[0]['post_id'])) {
+                return $posts;
+            } else {
+                return [];
+            }
+
+        }
+
     }
 
     PostTags::register();

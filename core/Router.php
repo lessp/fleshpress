@@ -109,7 +109,7 @@
             $res->render_template('error.html', [
                 'status_code' => 404, 
                 'message' => "Pretty sure that route does not exist. Duh!"
-            ], 401);
+            ], 404);
         }
     }
 

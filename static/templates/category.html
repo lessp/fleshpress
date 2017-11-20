@@ -21,21 +21,32 @@
 </h2>
 <section class="posts">
 <?php if (! empty($params['posts'])): ?>
-    <?php foreach($params['posts'] as $post): ?>
-        <article data-id="<?php echo $post['id']; ?>">
-            <h3>
-                <a href="/post/<?php echo $post['id']; ?>">
-                    <?php echo $post['title']; ?>
+    <?php foreach($posts as $post): ?>
+    <article data-id="<?php echo $post['id']; ?>">
+        <h3>
+            <a href="/post/<?php echo $post['id']; ?>">
+                <?php echo $post['title']; ?>
+            </a>
+        </h3>
+        <span>
+            <strong>Categories:</strong> 
+            <?php foreach($post['categories'] as $category): ?>
+                <a class="category" href="<?php echo '/category/' . $category['id']; ?>" title="<?php echo $category['name'] ?>">
+                    <i><?php echo $category['name']; ?></i>
                 </a>
-            </h3>
-            <span>
-                <strong>Category:</strong> 
-                <a href="<?php echo '/posts/' . $params['categoryId']; ?>" title="<?php echo $post['category'] ?>">
-                    <i><?php echo $post['category']; ?></i>
-                </a>
-            </span>
-            <p><?php echo $post['content']; ?></p>
-        </article>
+            <?php endforeach; ?>
+        </span>
+        <p><?php echo $post['content']; ?></p>
+        <span>
+            <?php foreach($post['tags'] as $tag): ?>
+            <a class="tag-link" href="<?php echo '/tag/' . $tag['id']; ?>" title="<?php echo $tag['name'] ?>">
+                <span class="tag">
+                    <?php echo $tag['name']; ?>
+                </span>
+            </a>
+            <?php endforeach; ?>
+        </span>
+    </article>
     <?php endforeach; ?>
 <?php else: ?>
 <article>

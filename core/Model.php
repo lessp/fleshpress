@@ -12,7 +12,7 @@
             self::$db = Connection::getInstance();
         }
 
-        protected static function getDB()
+        public static function getDB()
         {
             return self::$db->handler;
         }

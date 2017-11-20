@@ -216,3 +216,77 @@ button:hover,
 .button:hover {
 	background-color: hsla(248, 53%, 52%, 1);
 }
+
+a.tag-link {
+	color: white;
+	font-size: 1.4rem;
+}
+
+span.tag {
+	margin-right: 4px;
+    display: inline-block;
+	padding: .2rem 1.4rem;
+	padding-right: 1.8rem;
+    background: slateblue;
+	border-radius: 4px;
+	position: relative;
+	cursor: pointer;
+	transition: background-color 150ms ease-out;
+	margin-right: 12px;
+	max-height: 2.4rem;
+}
+
+span.tag a {
+	color: white;
+}
+
+span.tag:after {
+	content: '';
+    position: absolute;
+    right: -.8rem;
+    bottom: 0;
+    width: 0;
+	height: 0;
+	border-radius: 4px;
+	transition: border-color 150ms ease-out;
+    border-left: 1rem solid slateblue;
+    border-top: 1.2rem solid transparent;
+    border-bottom: 1.2rem solid transparent;
+}
+
+span.tag:before {
+	content: '';
+	position: absolute;
+	top: calc(50% - 2px);
+	right: 2px;
+	content: '';
+	width: 4px;
+	height: 4px;
+	background: white;
+	border-radius: 50px;
+}
+
+span.tag:hover {
+	background-color: hsla(248, 53%, 52%, 1);
+}
+
+span.tag:hover:after {
+	border-left-color: hsla(248, 53%, 52%, 1);
+}
+
+a.category:not(:first-child):after {
+	content: ',';
+	display: inline-block;
+	font-style: italic;
+}
+
+a.category:last-child:after {
+	content: none;
+	display: inline-block;
+	font-style: italic;
+}
+
+span.author {
+	display: inline-block;
+	margin: 1.4rem 0;
+}

@@ -23,7 +23,7 @@
             all
         </a>
     </li>
-<?php foreach($params['categories'] as $category): ?>
+<?php foreach($categories as $category): ?>
     <li>
         <a class="button" href="<?php echo '/category/' . $category['id']; ?>" title="<?php echo $category['name'] ?>">
             <?php echo strtolower($category['name']); ?>
@@ -41,27 +41,60 @@
             </a>
         </h3>
         <span>
-            <strong>Category:</strong> 
-            <a href="<?php echo '/category/' . $post['category_id']; ?>" title="<?php echo $post['category'] ?>">
-                <i><?php echo $post['category']; ?></i>
-            </a>
+            <strong>Categories:</strong> 
+            <?php foreach($post['categories'] as $category): ?>
+                <a class="category" href="<?php echo '/category/' . $category['id']; ?>" title="<?php echo $category['name'] ?>">
+                    <i><?php echo $category['name']; ?></i>
+                </a>
+            <?php endforeach; ?>
         </span>
         <p><?php echo $post['content']; ?></p>
+        <span class="author">
+            <strong>Author:</strong> 
+            <a href="<?php echo '/posts/user/' . $post['user_id']; ?>" title="<?php echo $post['author'] ?>">
+                <?php echo $post['author']; ?>
+            </a>
+        </span>
+        <br />
+        <span>
+            <?php foreach($post['tags'] as $tag): ?>
+            <a class="tag-link" href="<?php echo '/tag/' . $tag['id']; ?>" title="<?php echo $tag['name'] ?>">
+                <span class="tag">
+                    <?php echo $tag['name']; ?>
+                </span>
+            </a>
+            <?php endforeach; ?>
+        </span>
     </article>
 <?php endforeach; ?>
 </section>
 
-<h2 id="findById">Post::findById(1)</h2>
-<?php foreach($params['post'] as $post) : ?>
-    <article data-id="<?php echo $post['id']; ?>">
-        <h3>
-            <a href="/post/<?php echo $post['id']; ?>">
-                <?php echo $post['title']; ?>
+<h2 id="findById">Post::findOneById(1)</h2>
+<article data-id="<?php echo $post['id']; ?>">
+    <h3>
+        <a href="/post/<?php echo $post['id']; ?>">
+            <?php echo $post['title']; ?>
+        </a>
+    </h3>
+    <span>
+        <strong>Categories:</strong> 
+        <?php foreach($post['categories'] as $category): ?>
+            <a class="category" href="<?php echo '/category/' . $category['id']; ?>" title="<?php echo $category['name'] ?>">
+                <i><?php echo $category['name']; ?></i>
             </a>
-        </h3>
-        <p><?php echo $post['content']; ?></p>
-    </article>
-<?php endforeach; ?>
+        <?php endforeach; ?>
+    </span>
+    <p><?php echo $post['content']; ?></p>
+    <span>
+        <?php foreach($post['tags'] as $tag): ?>
+        <a class="tag-link" href="<?php echo '/tag/' . $tag['id']; ?>" title="<?php echo $tag['name'] ?>">
+            <span class="tag">
+                <?php echo $tag['name']; ?>
+            </span>
+        </a>
+        <?php endforeach; ?>
+    </span>
+</article>
 
 <h2>$params</h2>
 <article>

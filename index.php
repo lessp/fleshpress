@@ -25,6 +25,23 @@
         $res->render_template('start.html', ['req' => $req]);
     });
 
+
+    $app->get('/test', function($req, $res) {
+
+        $posts = Post::getAllWithTagsAndCategories();
+
+        $res->json($posts);
+
+    });
+
+    $app->get('/test/:id', function($req, $res) {
+        
+        $post = Post::getOneWithTagsAndCategories($req->params['id']);
+
+        $res->send(var_dump($post));
+
+    });
+
     require_once('./views/posts.php');
     require_once('./views/auth.php');
 

@@ -3,11 +3,31 @@
 <h1>post/:id</h1>
 
 <?php if (! $isAuthed): ?>
-<h2 id="findById">Post::findOneById(<?php echo $params['post']['id']; ?>)</h2>
-<article data-id="<?php echo $params['post']['id']; ?>">
-    <h3><?php echo $params['post']['title']; ?></h3>
-    <!-- <span><?php echo $params['post']['author']; ?></span> -->
-    <p><?php echo $params['post']['content']; ?></p>
+<h2 id="findById">Post::findOneById(<?php echo $post['id']; ?>)</h2>
+<article data-id="<?php echo $post['id']; ?>">
+    <h3>
+        <a href="/post/<?php echo $post['id']; ?>">
+            <?php echo $post['title']; ?>
+        </a>
+    </h3>
+    <span>
+        <strong>Categories:</strong> 
+        <?php foreach($post['categories'] as $category): ?>
+            <a class="category" href="<?php echo '/category/' . $category['id']; ?>" title="<?php echo $category['name'] ?>">
+                <i><?php echo $category['name']; ?></i>
+            </a>
+        <?php endforeach; ?>
+    </span>
+    <p><?php echo $post['content']; ?></p>
+    <span>
+        <?php foreach($post['tags'] as $tag): ?>
+        <a class="tag-link" href="<?php echo '/tag/' . $tag['id']; ?>" title="<?php echo $tag['name'] ?>">
+            <span class="tag">
+                <?php echo $tag['name']; ?>
+            </span>
+        </a>
+        <?php endforeach; ?>
+    </span>
 </article>
 <hr>
 <?php else: ?>
@@ -15,11 +35,11 @@
 <article>
     <form method="POST" action="" enctype="application/x-www-form-urlencoded">
         <input type="hidden" name="_method" value="PUT" />
-        <input type="text" name="title" value="<?php echo $params['post']['title']; ?>" />
+        <input type="text" name="title" value="<?php echo $post['title']; ?>" />
         <select name="category_id">
-            <?php foreach($params['categories'] as $category): ?>
+            <?php foreach($categories as $category): ?>
 
-            <?php if($params['postCategory'] === $category['id']): ?>
+            <?php if($postCategory === $category['id']): ?>
                 <option selected value="<?php echo $category['id'] ?>">
                     <?php echo $category['name'] ?>
                 </option>
@@ -31,7 +51,7 @@
 
             <?php endforeach; ?>
         </select>
-        <textarea type="text" name="content"><?php echo $params['post']['content']; ?></textarea>
+        <textarea type="text" name="content"><?php echo $post['content']; ?></textarea>
         <button type="submit">Update post</button>
     </form>
 </article>
