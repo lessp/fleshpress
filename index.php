@@ -25,8 +25,8 @@
         $res->render_template('start.html', ['req' => $req]);
     });
 
-    require_once('./views/posts.php');
-    require_once('./views/auth.php');
+    require_once('./routes/posts.php');
+    require_once('./routes/auth.php');
 
     function generateHashedPassword(string $password) {
         return password_hash($password, PASSWORD_DEFAULT, ['cost' => 12]);
