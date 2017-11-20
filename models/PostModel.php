@@ -2,6 +2,9 @@
 
     require_once('./core/Model.php');
 
+    require_once('./models/PostTagsModel.php');
+    require_once('./models/PostCategoryModel.php');
+
     class Post extends Model
     {
 
@@ -72,6 +75,34 @@
             $post['tags'] = json_decode('[' . $post['tags'] . ']', true);
             
             return $post;
+        }
+
+        public static function deleteOneById(int $postId) {
+            try {
+                $sql = 'DELETE FROM ' . PostCategory::getTableName() . ' WHERE post_id = :id';
+                $statement = self::getDB()->prepare($sql);
+                $statement->execute([':id' => $postId]);
+                $result = $statement->rowCount();  
+
+                $sql = 'DELETE FROM ' . PostTags::getTableName() . ' WHERE post_id = :id';
+                $statement = self::getDB()->prepare($sql);
+                $statement->execute([':id' => $postId]);
+                $result = $statement->rowCount();  
+
+                $sql = 'DELETE FROM ' . static::$tableName . ' WHERE id = :id';
+                $statement = self::getDB()->prepare($sql);
+                $statement->execute([':id' => $postId]);
+                $result = $statement->rowCount();
+
+                if ($result > 0) {
+                    return true;
+                } else {
+                    throw new Exception ("That's an error.");
+                }
+
+            } catch (PDOException $err) {
+                return $err->getMessage();
+            }
         }
 
     }

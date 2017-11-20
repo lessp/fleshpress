@@ -34,7 +34,7 @@
                     }
                 
                     break;
-                case 'DELETE': /* TODO */; break;
+                case 'DELETE': $this->data['params']['GET'] = $_GET; break;
             }
 
             if ($middleWares[0] !== null) {

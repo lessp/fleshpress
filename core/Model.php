@@ -201,6 +201,67 @@
             }
         }
 
+        public static function delete(array $params)
+        {
+
+            try {
+                
+                $paramLength = count($params);
+                $paramsToLookFor = '';
+                $i = 0;
+
+                foreach($params as $key => $param) {
+                    if ($i === $paramLength - 1) {
+                        $paramsToLookFor .= $key . ' = :' . $key;
+                    } else {
+                        $paramsToLookFor .= $key . ' = :' . $key . ' AND ';
+                    }
+                    $i++;
+                }
+
+                $sql = (
+                    'DELETE FROM ' . static::$tableName . ' WHERE ' . $paramsToLookFor
+                );
+
+                $statement = self::getDB()->prepare($sql);
+
+                foreach($params as $key => $param) {
+                    $params[':' . $key] = $param;
+                    unset($params[$key]);
+                }
+
+                if ($statement->execute($params)) {
+
+                    return $statement->rowCount();
+
+                } else {
+                    throw new Exception ("That's an error.");
+                }
+
+            } catch (PDOException $err) {
+                return $err->getMessage();
+            }
+        }
+
+        public static function deleteOneById(int $id)
+        {
+            try {
+                $sql = 'DELETE FROM ' . static::$tableName . ' WHERE id = :id LIMIT 1';
+                $statement = self::getDB()->prepare($sql);
+                $statement->execute([':id' => $id]);
+                $result = $statement->rowCount();  
+
+                if ($result > 0) {
+                    return true;
+                } else {
+                    throw new Exception ("That's an error.");
+                }
+
+            } catch (PDOException $err) {
+                return $err->getMessage();
+            }
+        }
+
 
         /**
          *

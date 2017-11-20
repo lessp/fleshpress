@@ -217,12 +217,26 @@ button:hover,
 	background-color: hsla(248, 53%, 52%, 1);
 }
 
+button.red {
+	margin-top: 1.2rem;
+	background-color: rgb(228, 55, 55);
+}
+
+button.red:hover {
+	background-color: rgb(204, 41, 41);
+}
+
 a.tag-link {
 	color: white;
 	font-size: 1.4rem;
 }
 
-span.tag {
+input[type=checkbox].tag {
+	display: none;
+}
+
+span.tag,
+input[type=checkbox].tag + label.tag {
 	margin-right: 4px;
     display: inline-block;
 	padding: .2rem 1.4rem;
@@ -234,13 +248,31 @@ span.tag {
 	transition: background-color 150ms ease-out;
 	margin-right: 12px;
 	max-height: 2.4rem;
+	color: white;
+}
+
+input[type=checkbox].tag + label.tag {
+	margin-right: 1.8rem;
+	transition: all 150ms ease-out;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+input[type=checkbox].tag:not(:checked) + label.tag {
+	opacity: .5;
+}
+
+input[type=checkbox].tag:checked + label.tag {
+	background: slateblue;
 }
 
 span.tag a {
 	color: white;
 }
 
-span.tag:after {
+span.tag:after,
+label.tag:after {
 	content: '';
     position: absolute;
     right: -.8rem;
@@ -254,7 +286,8 @@ span.tag:after {
     border-bottom: 1.2rem solid transparent;
 }
 
-span.tag:before {
+span.tag:before,
+label.tag:before {
 	content: '';
 	position: absolute;
 	top: calc(50% - 2px);
@@ -266,12 +299,17 @@ span.tag:before {
 	border-radius: 50px;
 }
 
-span.tag:hover {
+span.tag:hover,
+label.tag:hover {
 	background-color: hsla(248, 53%, 52%, 1);
 }
 
 span.tag:hover:after {
 	border-left-color: hsla(248, 53%, 52%, 1);
+}
+
+input[type=checkbox].tag:not(:checked) + label.tag:hover {
+	opacity: .75;
 }
 
 a.category:not(:first-child):after {
@@ -289,4 +327,9 @@ a.category:last-child:after {
 span.author {
 	display: inline-block;
 	margin: 1.4rem 0;
+}
+
+.tags-holder {
+	display: flex;
+	margin-bottom: 2.5rem;
 }

@@ -23,6 +23,14 @@
             <?php endforeach; ?>
         </select>
         <textarea type="text" name="content" placeholder="Add some content"></textarea>
+        <div class="tags-holder">
+        <?php foreach($tags as $tag): ?>
+            <span>
+                <input class="tag" type="checkbox" id="<?php echo $tag['id']; ?>" name=<?php echo "tag[" . $tag['id'] . "]"; ?> value="<?php echo $tag['id']; ?>" />
+                <label for="<?php echo $tag['id']; ?>" class="tag"><?php echo $tag['name']; ?></label>
+            </span>
+        <?php endforeach; ?>
+        </div>
         <button type="submit">Add post</button>
     </form>
 </article>

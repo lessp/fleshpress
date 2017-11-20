@@ -27,10 +27,15 @@ $app->post('/posts', 'requireLogin', function($req, $res) {
         if (! empty($req->body['title']) &&
             ! empty($req->body['content'])) {
 
+                $tags = [];
+                foreach($req->body['tag'] as $key => $tag) {
+                    $tags[$key] = $tag;
+                }
+
                 $newPost = new Post(
                     $req->body['title'], 
                     $req->body['content'],
-                    $req->cookies['id']
+                    $req->session->user['id']
                 );
                 
                 $postToReturn = $newPost->save();
@@ -39,9 +44,17 @@ $app->post('/posts', 'requireLogin', function($req, $res) {
                     $postToReturn['id'],
                     $req->body['category_id']
                 );
-    
+
                 $addPostCategory->save();
 
+                foreach($tags as $key => $tag) {
+                    $tagToSave = new PostTags(
+                        $postToReturn['id'],
+                        $key
+                    );
+                    $tagToSave->save();
+                }
+    
                 $res->redirect('/posts');
         }
 
@@ -58,10 +71,12 @@ $app->get('/post/:id', 'isAuthed', function($req, $res) {
         // $post = Post::findOneById($req->params['id']);
         $post = Post::findOneById($req->params['id']);
         $categories = Category::findAll();
+        $tags = Tags::findAll();
 
         $res->render_template('post.html', [
             'post' => $post, 
             'categories' => $categories,
+            'tags' => $tags,
             'req' => $req, 
             'isAuthed' => $req->isAuthed]
         );
@@ -79,6 +94,7 @@ $app->put('/post/:id', 'requireLogin', function($req, $res) {
 
         $postId = $req->params['id'];
         $categoryId = $req->body['category_id'];
+        $tags = $req->body['tag'];
 
         $updatedPost = Post::findByIdAndUpdate($postId, [
             'title' => $req->body['title'],
@@ -90,8 +106,33 @@ $app->put('/post/:id', 'requireLogin', function($req, $res) {
             'category_id' => $req->body['category_id']
         ], false, 'post_id');
 
+        $deleteCurrentTags = PostTags::delete(['post_id' => (int) $postId]);
+
+        foreach($tags as $key => $tag) {
+            $tagToSave = new PostTags(
+                $postId,
+                $key
+            );
+            $tagToSave->save();
+        }
+
         $res->redirect('/post/' . $postId);
 
+    } catch (Exception $err) {
+        $res->render_template('error.html', [
+            'status_code' => 500, 
+            'message' => $err->getMessage()
+        ], 500);
+    }
+});
+
+$app->delete('/post/:id', 'requireLogin', function($req, $res) {
+    try {
+        $deleted = Post::deleteOneById((int) $req->params['id']);
+
+        if ($deleted) {
+            $res->redirect('/posts');
+        }
     } catch (Exception $err) {
         $res->render_template('error.html', [
             'status_code' => 500, 
