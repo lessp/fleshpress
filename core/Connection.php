@@ -1,8 +1,6 @@
 <?php 
 
     require_once('./utils/Singleton.php');
-
-    use PDO;
     
     class Connection extends Singleton
     {
