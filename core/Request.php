@@ -60,7 +60,6 @@
                 return $this->data[$name];
             }
 
-            // throw new Exception;
             return null;
         }
     }

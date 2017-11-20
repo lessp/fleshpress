@@ -55,10 +55,6 @@
                     'SELECT * FROM ' . static::$tableName . ' WHERE ' . $paramsToLookFor
                 );
 
-                // echo '<pre>';
-                //     print_r('theSQLQuery: ' . $sql);
-                // echo '</pre>';
-
                 $statement = self::getDB()->prepare($sql);
 
                 foreach($params as $key => $param) {
@@ -163,10 +159,6 @@
                     ' WHERE ' . $idDenominator . ' = :' . $idDenominator
                 );
                 
-                // echo '<pre>';
-                //     print_r('theSQLQuery: ' . $sql);
-                // echo '</pre>';
-                
                 self::getDB()->beginTransaction();
                 $statement = self::getDB()->prepare($sql);
                 
@@ -176,9 +168,6 @@
                 }
                 
                 $params[':' . $idDenominator] = $id;
-                // echo '<pre>';
-                //     print_r($params);
-                // echo '</pre>';
 
                 $statement->execute($params);
 

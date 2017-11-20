@@ -75,9 +75,4 @@
 
     }
 
-    class jsonSerialize implements JsonSerializable {
-        function __construct($value) { $this->value = $value; }
-        function jsonSerialize() { return $this->value; }
-    }
-
 ?>
