@@ -138,7 +138,6 @@
         {
 
             try {
-
                 
                 $paramLength = count($params);
                 $paramsToUpdate = '';
@@ -265,21 +264,28 @@
 
                 $i = 0;
                 $paramsLength = count($params);
+
                 $paramsToSave = '';
                 $paramsToSavePlaceholders = '';
-                foreach($params as $key => $param) {
-                    if ($i === 0) {
-                        $paramsToSave .= '(' . $key . ', ';
-                        $paramsToSavePlaceholders .= '(:' . $key . ', ';
-                    } elseif ($i === $paramsLength - 1) {
-                        $paramsToSave .= $key . ')';
-                        $paramsToSavePlaceholders .= ':' . $key . ')';
-                    } else {
-                        $paramsToSave .= $key . ', ';
-                        $paramsToSavePlaceholders .= ':' . $key . ', ';
+
+                if ($paramsLength === 1) {
+                    $paramsToSave .= '(' . key($params) . ')';
+                    $paramsToSavePlaceholders .= '(:' . key($params) . ')';
+                } else {
+                    foreach($params as $key => $param) {
+                        if ($i === 0) {
+                            $paramsToSave .= '(' . $key . ', ';
+                            $paramsToSavePlaceholders .= '(:' . $key . ', ';
+                        } elseif ($i === $paramsLength - 1) {
+                            $paramsToSave .= $key . ')';
+                            $paramsToSavePlaceholders .= ':' . $key . ')';
+                        } else {
+                            $paramsToSave .= $key . ', ';
+                            $paramsToSavePlaceholders .= ':' . $key . ', ';
+                        }
+                      
+                        $i++;
                     }
-                  
-                    $i++;
                 }
 
                 $sql = (
