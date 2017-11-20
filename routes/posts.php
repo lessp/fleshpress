@@ -207,6 +207,30 @@ $app->get('/tag/:id', function($req, $res) {
     }
 });
 
+$app->post('/tags', 'requireLogin', function($req, $res) {
+    try {
+        $newTag = new Tags($req->body['name']);
+
+        $tagToReturn = $newTag->save();
+
+        $res->json($tagToReturn);
+    } catch (Exception $err) {
+        $res->json($err->getMessage(), 500);
+    }
+});
+
+$app->post('/categories', 'requireLogin', function($req, $res) {
+    try {
+        $newCategory = new Category($req->body['name']);
+
+        $categoryToReturn = $newCategory->save();
+
+        $res->json($categoryToReturn);
+    } catch (Exception $err) {
+        $res->json($err->getMessage(), 500);
+    }
+});
+
 // $app->get('/posts/:user/:userId', function($req, $res) {
 
 //     if ($req->params['user'] !== 'user') {
@@ -258,7 +282,6 @@ $app->get('/posts/:userID/:categoryID', function($req, $res) {
             'status_code' => 500, 
             'message' => $err->getMessage()
         ], 500);
-        // $res->json($err->getMessage(), 400);
     }
 });
 
