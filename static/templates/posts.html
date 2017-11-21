@@ -2,16 +2,15 @@
 
 <h1>posts</h1>
 
-<?php if (! empty($params['updatedPost'])) : ?>
+<?php if (! empty($updatedPost)) : ?>
     <h2 id="findByIdAndUpdate">Post::findByIdAndUpdate(1)</h2>
-    <article data-id="<?php echo $params['updatedPost']['id']; ?>">
+    <article data-id="<?php echo $updatedPost['id']; ?>">
         <h3>
-            <a href="/post/<?php echo $params['updatedPost']['id']; ?>">
-                <?php echo $params['updatedPost']['title']; ?>
+            <a href="/post/<?php echo $updatedPost['id']; ?>">
+                <?php echo $updatedPost['title']; ?>
             </a>
         </h3>
-        <!-- <span><?php echo $params['updatedPost']['author']; ?></span> -->
-        <p><?php echo $params['updatedPost']['content']; ?></p>
+        <p><?php echo $updatedPost['content']; ?></p>
     </article>
 
 <?php endif; ?>

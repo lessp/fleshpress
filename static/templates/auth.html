@@ -2,12 +2,12 @@
 
 
 
-<?php if ($params['req']->isAuthed): ?>
+<?php if ($req->isAuthed): ?>
 <h1>admin</h1>
-<h2>@<?php echo $params['user']['username']; ?><a class="button" style="float: right;" href="/auth/logout" title="auth/logout">auth/logout</a></h2>
+<h2>@<?php echo $user['username']; ?><a class="button" style="float: right;" href="/auth/logout" title="auth/logout">auth/logout</a></h2>
 <article>
     <p>
-        Welcome back <?php echo $params['user']['first_name'] ?>  <?php echo $params['user']['last_name']; ?>!
+        Welcome back <?php echo $user['first_name'] ?>  <?php echo $user['last_name']; ?>!
     </p>
 </article>
 <hr>
@@ -16,7 +16,7 @@
     <form method="POST" action="/posts">
         <input type="text" name="title" placeholder="Enter a title" />
         <select name="category_id">
-            <?php foreach($params['categories'] as $category): ?>
+            <?php foreach($categories as $category): ?>
             <option value="<?php echo $category['id'] ?>">
                 <?php echo $category['name'] ?>
             </option>
