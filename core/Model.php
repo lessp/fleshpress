@@ -55,6 +55,7 @@
                     'SELECT * FROM ' . static::$tableName . ' WHERE ' . $paramsToLookFor
                 );
 
+                
                 $statement = self::getDB()->prepare($sql);
 
                 foreach($params as $key => $param) {

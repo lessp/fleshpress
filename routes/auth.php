@@ -79,4 +79,86 @@
         }
     });
 
+    $app->get('/user/:forgot-password', function($req, $res) {
+        
+        if (! $req->params['forgot-password']) {
+            $res->redirect('/auth');
+        }
+
+        $res->render_template('forgot-password.html');
+    });
+
+    $app->post('/user/:forgot-password', function($req, $res) {
+
+        if (! $req->params['forgot-password']) {
+            $res->redirect('/auth');
+        }
+
+        $userFound = User::find([
+            'email' => $req->body['email']
+        ]);
+
+        if (! empty($userFound)) {
+
+            $token = new PasswordToken(
+                bin2hex(random_bytes(40)),
+                $userFound['id'],
+                new DateTime()
+            );
+
+            $tokenThatWasSaved = $token->save();
+
+            $emailMsg = 'Follow the link below in order to reset your password. 
+            http://05.tomekander.chas.academy/reset-password/' . $tokenThatWasSaved['token'] . 
+            "\n\nThis token will expire in one hour.";
+
+            $emailMsg = wordwrap($emailMsg, 70);
+            $headers = 'From: tom.ekander@chasacademy.se' . "\r\n" .
+            'Reply-To: tom.ekander@chasacademy.se' . "\r\n";
+
+            mail($userFound['email'], "Reset Password - 05.tomekander.chas.academy", $emailMsg, $headers);
+
+            $res->redirect('/auth');
+        }
+
+    });
+
+    $app->get('/reset-password/:token', function($req, $res) {
+        $tokenFound = PasswordToken::find(['token' => $req->params['token']]);
+
+        if (! empty($tokenFound)) {
+            if ($tokenFound['used'] || new DateTime() > date_create_from_format('Y-m-d H:i:s', $tokenFound['expires'])) {
+                $res->redirect('/');
+            }
+
+            $user = User::findOneById($tokenFound['user_id']);
+
+            $res->render_template('reset-password.html', [
+                'token' => $tokenFound['token'], 
+                'userId' => $user['id']
+            ]);
+        }
+    });
+
+    $app->post('/reset-password', function($req, $res) {
+        $tokenFound = PasswordToken::find(['token' => $req->body['token']]);
+
+        if (! empty($tokenFound)) {
+            if ($tokenFound['used'] || new DateTime() > date_create_from_format('Y-m-d H:i:s', $tokenFound['expires'])) {
+                $res->redirect('/');
+            }
+
+            $userFound = User::findOneById($req->body['user_id']);
+
+            $hashedPassword = generateHashedPassword($req->body['password']);
+            
+            PasswordToken::findByIdAndUpdate($tokenFound['id'], ['used' => 1]);
+            User::findByIdAndUpdate($userFound['id'], ['password' => $hashedPassword]);
+
+            $res->redirect('/auth');
+
+        }
+
+    });
+
 ?>

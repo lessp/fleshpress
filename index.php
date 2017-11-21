@@ -16,6 +16,7 @@
     require_once('./models/UserModel.php');
     require_once('./models/TagModel.php');
     require_once('./models/PostTagsModel.php');
+    require_once('./models/PasswordToken.php');
 
     $app = new Fleshpress();
 
