@@ -1,6 +1,6 @@
 <?php 
 
-    require_once('./core/Model.php');
+    require_once('./database/Model.php');
 
     require_once('./models/PostTagsModel.php');
     require_once('./models/PostCategoryModel.php');
@@ -52,7 +52,7 @@
             return $posts;
         }
 
-        public static function findOneById(int $postId)
+        public static function findOneById(int $postId, string $idD = '')
         {
             $query = 'SELECT DISTINCT p.id, p.title, p.content, p.user_id, u.first_name, u.last_name,
                         GROUP_CONCAT(DISTINCT "{\"id\":", pc.category_id, ",", "\"name\":", "\"", c.name, "\"}") as categories,
@@ -77,7 +77,7 @@
             return $post;
         }
 
-        public static function deleteOneById(int $postId) {
+        public static function deleteOneById(int $postId, string $idD = '') {
             try {
                 $sql = 'DELETE FROM ' . PostCategory::getTableName() . ' WHERE post_id = :id';
                 $statement = self::getDB()->prepare($sql);

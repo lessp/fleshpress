@@ -1,10 +1,12 @@
 <?php
 
     require_once('./utils/Singleton.php');
+    require_once('./core/MiddleWare.php');
+    
     require_once('Request.php');
     require_once('Response.php');
 
-    class Router extends Singleton
+    class Router
     {
         private static $ROUTES;
         private static $MIDDLEWARE;
@@ -12,10 +14,7 @@
         private static $REQUEST_METHOD;
         private static $REQUEST_URI;
 
-        private static $__startTime;
-
-        public function __construct()
-        {}
+        public function __construct() {}
 
         public static function add(string $route, $funcs, string $method) 
         {
@@ -26,12 +25,13 @@
             ];
         }
 
-        public static function addMiddleWare($middleWare) 
+        public static function addMiddleWare(MiddleWare $middleWare) 
         {
             self::$MIDDLEWARE[] = $middleWare;
         }
 
-        public static function getRoutes(): array {
+        public static function getRoutes(): array 
+        {
             return self::$ROUTES;
         }
 
@@ -40,8 +40,10 @@
             $routeParts = explode('/', $route);
             $params = [];
 
-            foreach($routeParts as $key => $routePart) {
-                if (strpos($routePart, ':') === 0) {
+            foreach($routeParts as $key => $routePart) 
+            {
+                if (strpos($routePart, ':') === 0) 
+                {
                     $paramName = substr($routePart, 1);
                     $params[$paramName] = '';
                 }
@@ -55,13 +57,16 @@
             $req = new Request(self::$REQUEST_METHOD, self::$REQUEST_URI, $params, self::$MIDDLEWARE);
             $res = new Response();
             
-            if (! empty(self::$MIDDLEWARE)) {
-                foreach(self::$MIDDLEWARE as $middleWare) {
+            if (! empty(self::$MIDDLEWARE)) 
+            {
+                foreach(self::$MIDDLEWARE as $middleWare) 
+                {
                     $middleWare($req, $res);
                 }
             } 
             
-            foreach($route['funcs'] as $func) {
+            foreach($route['funcs'] as $func) 
+            {
                 $func($req, $res);
             }
         }
@@ -75,9 +80,11 @@
                 return self::execute(self::$ROUTES[$method][$path]);
             } else {
 
-                foreach(self::$ROUTES[$method] as $key => $route) {
+                foreach(self::$ROUTES[$method] as $key => $route) 
+                {
                     
-                    if (empty($route['urlVars'])) {
+                    if (empty($route['urlVars'])) 
+                    {
                         continue;
                     }
 
@@ -87,13 +94,15 @@
                     $pathParts = explode('/', $purePath);
                     $routeParts = explode('/', $pureRoute);
 
-                    if ((count($pathParts) - 1) === count($route['urlVars'])) {
-                        if ($pathParts[0] === $routeParts[0]) {
-                            
+                    if ((count($pathParts) - 1) === count($route['urlVars'])) 
+                    {
+                        if ($pathParts[0] === $routeParts[0]) 
+                        {
                             unset($pathParts[0]);
                             
                             $i = 1;
-                            foreach($route['urlVars'] as $key => $urlVar) {
+                            foreach($route['urlVars'] as $key => $urlVar) 
+                            {
                                 $route['urlVars'][$key] = $pathParts[$i];
                                 $i++;
                             }

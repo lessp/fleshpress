@@ -5,10 +5,13 @@
     error_reporting(E_ALL);
 
     require_once('./core/Fleshpress.php');
-    require_once('./core/Request.php');
+    require_once('./middlewares/Session.php');
+    require_once('./middlewares/Utils.php');
 
-    require_once('./middleware/Session.php');
-    require_once('./middleware/Utils.php');
+    $app = new Fleshpress();
+
+    $app->config['db'] = include_once('./config/db.php');
+    $app->use(new Session());
 
     require_once('./models/PostModel.php');
     require_once('./models/CategoryModel.php');
@@ -17,10 +20,6 @@
     require_once('./models/TagModel.php');
     require_once('./models/PostTagsModel.php');
     require_once('./models/PasswordToken.php');
-
-    $app = new Fleshpress();
-
-    $app->use(new Session());
 
     $app->get('/', function($req, $res) {
         $res->render_template('start.html', ['req' => $req]);

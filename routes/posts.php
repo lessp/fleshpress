@@ -32,14 +32,16 @@ $app->post('/posts', 'requireLogin', function($req, $res) {
                     $tags[$key] = $tag;
                 }
 
+                
                 $newPost = new Post(
                     $req->body['title'], 
                     $req->body['content'],
                     $req->session->user['id']
                 );
                 
+                
                 $postToReturn = $newPost->save();
-    
+
                 $addPostCategory = new PostCategory(
                     $postToReturn['id'],
                     $req->body['category_id']
@@ -68,7 +70,6 @@ $app->post('/posts', 'requireLogin', function($req, $res) {
 $app->get('/post/:id', 'isAuthed', function($req, $res) {
     try {
 
-        // $post = Post::findOneById($req->params['id']);
         $post = Post::findOneById($req->params['id']);
         $categories = Category::findAll();
         $tags = Tags::findAll();

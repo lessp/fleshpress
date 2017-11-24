@@ -1,6 +1,6 @@
 <?php 
 
-    abstract class Singleton 
+    trait Singleton 
     {
         private static $instances = array();
 

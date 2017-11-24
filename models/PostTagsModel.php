@@ -1,6 +1,6 @@
 <?php 
 
-    require_once('./core/Model.php');
+    require_once('./database/Model.php');
 
     class PostTags extends Model
     {
@@ -21,7 +21,7 @@
             static::$tableName = 'post_tags';
         }
 
-        public static function findById(int $tagId) {
+        public static function findById(int $tagId, string $idD = 'id') {
             $query = 'SELECT DISTINCT t.id, pt.post_id as post_id 
             FROM tags t
                 LEFT JOIN post_tags pt ON t.id = pt.tag_id

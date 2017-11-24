@@ -23,13 +23,15 @@
 
             switch ($method) {
                 case 'GET': $this->data['params']['GET'] = $_GET; break;
-                case 'POST': $this->data['body'] = $_POST; break;
+                case 'POST': $this->data['body']  = $_POST; break;
                 case 'PUT': 
             
+                    // If the incoming request is a real PUT-request
                     if (! empty(parse_str(file_get_contents('php://input'), $_PUT))) 
                     {
                         $this->data['body'] = parse_str(file_get_contents('php://input'), $_PUT); 
-                    } else {
+                    } else { 
+                    // Probably a form with a disguised PUT-request coming in
                         $this->data['body'] = $_POST;
                     }
                 
@@ -37,6 +39,7 @@
                 case 'DELETE': $this->data['params']['GET'] = $_GET; break;
             }
 
+            // Cheap fail-safe
             if ($middleWares[0] !== null) {
 
                 foreach($middleWares as $middleWare) {

@@ -1,6 +1,6 @@
 <?php 
 
-    require_once('./core/Model.php');
+    require_once('./database/Model.php');
 
     class User extends Model
     {

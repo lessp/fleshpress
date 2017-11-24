@@ -1,9 +1,9 @@
 <?php
 
+    require_once('./core/MiddleWare.php');
     require_once('./core/Request.php');
-    require_once('./core/Response.php');
 
-    class Session {
+    class Session extends MiddleWare {
         
         private $_settings;
 
@@ -25,7 +25,8 @@
 
         }
 
-        public function __invoke(Request $req, Response $res) {
+        public function __invoke(Request $req) 
+        {
             
             session_set_cookie_params(
                 $this->_settings['lifeTime'],
