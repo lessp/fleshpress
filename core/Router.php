@@ -1,6 +1,6 @@
 <?php
 
-    require_once('./utils/Singleton.php');
+    require_once('./core/utils/Singleton.php');
     require_once('./core/MiddleWare.php');
     
     require_once('Request.php');
@@ -115,7 +115,7 @@
 
             // No match
             $res = new Response();
-            $res->render_template('error.html', [
+            $res->error([
                 'status_code' => 404, 
                 'message' => "Pretty sure that route does not exist. Duh!"
             ], 404);

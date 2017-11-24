@@ -5,12 +5,7 @@
     class Response 
     {
 
-        private $preferences;
-
-        public function __construct() 
-        {
-            $this->preferences = include('./config/preferences.php');
-        }
+        public function __construct() {}
 
         /**
         *
@@ -110,6 +105,19 @@
             }
 
             return exit(print($data));
+        }
+
+        /**
+        *
+        * Renders the default error-page
+        * 
+        * @param array  Parameters to pass and extract to the view
+        * @param int    Status code to send
+        */
+        public function error(array $params, int $statusCode = 404)
+        {
+            $template_path = Config::getInstance()['templatesFolder'] . 'error.html';
+            return $this->render_file($template_path, $params, $statusCode);
         }
 
     }

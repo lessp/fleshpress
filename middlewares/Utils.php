@@ -1,14 +1,5 @@
 <?php
 
-function isAuthed($req, $res) {
-    
-    if (isset($req->session->user)) {
-        $req->isAuthed = true;
-    } else {
-        $req->isAuthed = false;
-    }
-}
-
 function requireLogin($req, $res) {
 
     if (isset($req->session->user)) {

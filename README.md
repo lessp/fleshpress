@@ -1,13 +1,11 @@
-# 05-dynamisk-webbplats-php-lessp
-
-http://05.tomekander.chas.academy
+# Fleshpress
 
 A very basic `PHP` MVC framework inspired by `Express (NodeJS)` and `Flask (Python)` made as my first PHP-assignment at [Chas Academy - Fullstack Web Developer](https://chasacademy.se "Chas Academy").
 
 ## Basic Route Example
 
 ```php
-$app = new App();
+$app = new Fleshpress();
 
 $app->get('/', function($req, $res) {
     $res->send('Hello World!', 200);
@@ -100,7 +98,7 @@ $app->get('/posts', function($req, $res) {
         $res->render_template('posts.html', ['posts' => $posts]);
 
     } catch (Exception $err) {
-        $res->render_template('error.html', ['message' => $err->getMessage()], 500)
+        $res->error(['message' => $err->getMessage()], 500) // the error-method defaults to error.html
     }
 });
 

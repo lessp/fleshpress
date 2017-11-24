@@ -1,7 +1,7 @@
 <?php 
 
     require_once('./core/Config.php');
-    require_once('./utils/Singleton.php');
+    require_once('./core/utils/Singleton.php');
     
     class Connection
     {
