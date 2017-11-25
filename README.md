@@ -147,7 +147,7 @@ And to roll your own extend from the MiddleWare-class.
 
 See [Session Middleware](middlewares/Session.php) for an example.
 
-The Session Middleware is included on every page which can be useful for logging in/out user or similar.
+The Session Middleware is included on every page which can be useful for logging in/out a user or similar.
 
 ```php
 
@@ -179,3 +179,34 @@ $app->post('/login', function($req, $res) {
 
 });
 ```
+
+## Config
+
+Although I've tried to keep things as un-opinionated as possible, there are some default settings 
+and some that needs to be followed, at the moment.
+
+### Template Folder
+
+The template path defaults to /static/templates, this can be overriden by calling the config on the Fleshpress-object.
+
+```php
+$app = new Fleshpress();
+
+$app->config['templatesFolder'] = '/some/path/';
+```
+
+### Database Connection
+
+Database connections are optional, but whenever you use it you must provide the config with the following information.
+
+```php
+$app = new Fleshpress();
+
+$app->config['db'] = [
+    'dsn' => 'mysql:host=HOST;dbname=DBNAME;charset=utf8',
+    'user' => 'USER',
+    'password' => 'PASSWORD'
+];
+```
+
+
