@@ -27,7 +27,7 @@ $app->start();
 
 Custom models extend from `Model` and implement the abstract function `abstract static public function register();` and a schema.
 
-Here's a basic example.
+Here's a basic example where `'title'` and `'content'` are the names of the columns in your table and `'blog_posts'` is the actual table name.
 
 ```php
 class BlogPostModel extends Model {
