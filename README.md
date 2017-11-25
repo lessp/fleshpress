@@ -46,16 +46,18 @@ BlogPostModel::register();
 The base model currently supports the following queries.
 
 ```php
-BlogPostModel::findAll();
-BlogPostModel::find(array $params);
-BlogPostModel::findById(int $id);
-BlogPostModel::findOneById(int $id);
-BlogPostModel::findByIdAndUpdate(
+Model::findAll();
+Model::find(array $params);
+Model::findById(int $id);
+Model::findOneById(int $id);
+Model::findByIdAndUpdate(
     int $id, 
     array $params, 
     bool $returnUpdatedItem = false, 
-    string $idDenominator = 'id'
+    string $idDenominator = 'id' // may be removed
 );
+Model::delete(array $params);
+Model::deleteOneById(int $id);
 ```
 
 To create a new Blog Post in this example we would use the following syntax:
@@ -98,7 +100,7 @@ $app->get('/posts', function($req, $res) {
         $res->render_template('posts.html', ['posts' => $posts]);
 
     } catch (Exception $err) {
-        $res->error(['message' => $err->getMessage()], 500) // the error-method defaults to error.html
+        $res->error(['message' => $err->getMessage()], 500) // the Response error-method defaults to error.html
     }
 });
 
@@ -139,4 +141,41 @@ Eg.
 
 ```php
 $app->use(new SomeMiddleware);
+```
+
+And to roll your own extend from the MiddleWare-class.
+
+See [Session Middleware](middlewares/Session.php) for an example.
+
+The Session Middleware is included on every page which can be useful for logging in/out user or similar.
+
+```php
+
+$app = new Fleshpress();
+
+$app->use(new Session());
+$app->config['db'] = [
+    'dsn' => 'mysql:host=127.0.0.1;dbname=blog;charset=utf8',
+    'user' => 'root',
+    'password' => 'root'
+];
+
+$app->post('/login', function($req, $res) {
+
+    $userFound = UserModel::find(['email' => $req->body['email']]);
+
+    if (! empty($userFound)) {
+        if (password_verify($req->body['password'], $userFound['password'])) {
+            $req->session->user = [
+                'id' => $userFound['id'],
+                'name' => $userFound['name']
+            ];
+
+            $res->redirect('/admin');
+        }
+    }
+
+    $res->redirect('/login');
+
+});
 ```
