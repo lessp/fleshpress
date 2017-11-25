@@ -1,6 +1,5 @@
 <?php
 
-    require_once('./core/utils/Singleton.php');
     require_once('./core/MiddleWare.php');
     
     require_once('Request.php');
@@ -16,7 +15,7 @@
 
         public function __construct() {}
 
-        public static function add(string $route, $funcs, string $method) 
+        protected static function add(string $route, $funcs, string $method) 
         {
             self::$ROUTES[$method][$route] = [
                 'route' => $route,
@@ -25,7 +24,7 @@
             ];
         }
 
-        public static function addMiddleWare(MiddleWare $middleWare) 
+        protected static function addMiddleWare(MiddleWare $middleWare) 
         {
             self::$MIDDLEWARE[] = $middleWare;
         }
