@@ -4,17 +4,12 @@ A very basic `PHP` MVC framework inspired by `Express (NodeJS)` and `Flask (Pyth
 
 # Table of Contents
 
-[Basic Route Example](#basic-route-example)
-
-[Models](#models)
-
-[Middleware Functions](#middleware-functions)
-
-[More Examples](#more-examples)
-
-[Middleware Classes](#middleware)
-
-[Config](#config)
+[Basic Route Example](#basic-route-example)<br>
+[Models](#models)<br>
+[Middleware Functions](#middleware-functions)<br>
+[More Examples](#more-examples)<br>
+[Middleware Classes](#middleware)<br>
+[Config](#config)<br>
 
 ## Basic Route Example
 
@@ -174,6 +169,7 @@ $app->config['db'] = [
     'password' => 'root'
 ];
 
+/* Login */
 $app->post('/login', function($req, $res) {
 
     $userFound = UserModel::find(['email' => $req->body['email']]);
@@ -191,6 +187,13 @@ $app->post('/login', function($req, $res) {
 
     $res->redirect('/login');
 
+});
+
+/* Logout */
+$app->get('/logout', function($req, $res) {
+    $req->session->user = null;
+
+    $res->redirect('/');
 });
 ```
 
