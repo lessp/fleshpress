@@ -226,4 +226,15 @@ $app->config['db'] = [
 ];
 ```
 
+## Authors
 
+* **Tom Ekander** - *Initial work* - [lessp](https://github.com/lessp)
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+
+## Acknowledgments
+
+* [axelolsson](https://github.com/axelolsson) - for help, trying to teach us this stuff and for letting me borrow bits and pieces
+* [Flask](http://flask.pocoo.org/), [Express](https://expressjs.com/), [Mongoose](http://mongoosejs.com/) - for inspiration
