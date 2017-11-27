@@ -78,7 +78,7 @@
         */
         public function redirect(string $url)
         {
-            return header('Location:'. $url);
+            return exit(header('Location:'. $url));
         }
 
         /**

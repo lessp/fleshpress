@@ -85,10 +85,12 @@ To create a new Blog Post in this example we would use the following syntax:
 To use a middleware function we can use the following syntax:
 
 ```php
+/* Protected Route */
 $app->get('/protected', 'requireLogin', function($req, $res) {
     $res->render_template('protected.html');
 });
 
+/* Middleware function, has acccess to the Request and Response-object */
 function requireLogin($req, $res) {
     $isAuthed = false;
 
