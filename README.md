@@ -2,6 +2,8 @@
 
 A very basic `PHP` MVC framework inspired by `Express (NodeJS)` and `Flask (Python)` made as my first PHP-assignment at [Chas Academy - Fullstack Web Developer](https://chasacademy.se "Chas Academy").
 
+Please note that this code is obviously __not__ something you would use in production!
+
 # Table of Contents
 
 [Basic Route Example](#basic-route-example)<br>
